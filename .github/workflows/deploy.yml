@@ -1,21 +1,23 @@
-name: Deploy to Hostinger
+deploy:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
 
-on:
-  push:
-    branches:
-      - main  # deploy only when pushing to main branch - yml
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+    - name: Add Hostinger to known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Deploy theme to Hostinger
-        run: |
-          rsync -avz --delete \
+    - name: Deploy via rsync
+      run: |
+        rsync -avz --delete \
           -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
           ./ \
           ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:/home/u645459492/domains/smrmnt.com/public_html/portal/wp-content/themes/fopsco/
