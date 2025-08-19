@@ -16,6 +16,6 @@ jobs:
       - name: Deploy theme to Hostinger
         run: |
           rsync -avz --delete \
-            -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
-            ./wp-content/themes/fopsco/ \
-            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:/home/u645459492/domains/smrmnt.com/public_html/portal/wp-content/themes/fopsco/
+          -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
+          ./ \
+          ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:/home/u645459492/domains/smrmnt.com/public_html/portal/wp-content/themes/fopsco/
