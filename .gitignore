@@ -9,7 +9,6 @@ yarn-error.log*
 dist/
 build/
 public/
-assets/css/output.css
 
 # OS
 .DS_Store
