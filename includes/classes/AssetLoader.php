@@ -10,7 +10,7 @@ class AssetLoader {
     }
 
     public function register_assets() {
-    // Load Tailwind first
+    
         wp_enqueue_style( 'fopsco-tailwind', get_template_directory_uri() . '/assets/css/output.css', [], filemtime(get_template_directory() . '/assets/css/output.css') );
 
         wp_enqueue_script( 'validator', '//cdn.jsdelivr.net/npm/validator@13.9.0/validator.min.js', [], '13.9.0', true );
@@ -20,6 +20,3 @@ class AssetLoader {
     }
 
 }
-
-// Initialize
-AssetLoader::get_instance();
