@@ -3,6 +3,9 @@
 svg#Layer_1 {
     width: 270px;
 }
+#member_type {
+    color: color-mix(in oklab, currentcolor 50%, transparent);
+}
 #member_type option:not(:first-child) {
     color: #182955;
 }
