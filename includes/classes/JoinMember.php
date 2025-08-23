@@ -10,7 +10,7 @@ class JoinMember {
     }
 
     public function join_member() {
-        register_rest_route('custom/v1', '/join', [
+        register_rest_route('portal/v1', '/join', [
             'methods' => 'POST',
             'callback' => [$this, 'join_fopsco'],
             'permission_callback' => '__return_true',
