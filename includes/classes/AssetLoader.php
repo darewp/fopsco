@@ -18,7 +18,7 @@ class AssetLoader {
 
         wp_enqueue_script( 'fopsco', get_template_directory_uri() . '/assets/js/main.js', [], filemtime(get_template_directory() . '/assets/js/main.js'), true );
 
-        wp_localize_script('portal-join', 'wpApiSettings', [
+        wp_localize_script('fopsco-join', 'wpApiSettings', [
             'nonce' => wp_create_nonce('wp_rest')
         ]);
     }
