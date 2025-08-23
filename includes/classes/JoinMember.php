@@ -69,6 +69,10 @@ class JoinMember {
             return $user_id;
         }
 
+        // PENDING
+        $user = new \WP_User($user_id);
+        $user->set_role('pending');
+
         wp_update_user([
             'ID'         => $user_id,
             'first_name' => $first_name,
