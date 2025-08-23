@@ -29,7 +29,7 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
     try {
         const res = await fetch('/wp-json/lodge/v1/join', {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json",  "X-WP-Nonce": wpApiSettings.nonce },
             body: JSON.stringify({ first_name, last_name, contact, email, password, member_type })
         });
 
