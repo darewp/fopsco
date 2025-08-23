@@ -37,7 +37,7 @@ get_header();
                 <div>
                     <input type="password" id="confirm" placeholder="Confirm Password" class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none" autocomplete="off" required>
                 </div>
-
+                <input type="hidden" name="website" id="website" value="">
                 <div id="errors" class="text-red-600 text-sm"></div>
 
                 <button type="submit" class="w-full bg-[#182955] text-white py-3 px-4 rounded-lg hover:bg-[#F85E00] transition">Join Now</button>
