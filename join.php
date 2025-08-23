@@ -28,7 +28,7 @@ get_header();
                     <select id="member_type" class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none" required>
                         <option value="" disabled selected>Select Member Type</option>
                         <option value="regular">Online Professional</option>
-                        <option value="associate">Associates</option>
+                        <option value="associate">MSME</option>
                     </select>
                 </div>                
                 <div>
