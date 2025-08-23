@@ -38,7 +38,7 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
             errorsEl.innerHTML = `<p>${data.message || "Lodge failed."}</p>`;
         } else {
             alert("You are successfully added!");
-            window.location.href = "<?php echo site_url('/welcome'); ?>";
+            window.location.href = '/welcome';
         }
     } catch (err) {
         errorsEl.innerHTML = `<p>Something went wrong. Try again later.</p>`;

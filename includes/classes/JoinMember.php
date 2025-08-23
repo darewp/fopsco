@@ -13,8 +13,28 @@ class JoinMember {
         register_rest_route('lodge/v1', '/join', [
             'methods' => 'POST',
             'callback' => [$this, 'join_fopsco'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [$this, 'verify_nonce_and_rate_limit'],
         ]);
+    }
+
+    public function verify_nonce_and_rate_limit($request) {
+        
+        $nonce = $request->get_header('X-WP-Nonce');
+        if (!$nonce || !wp_verify_nonce($nonce, 'wp_rest')) {
+            return new \WP_Error('invalid_nonce', 'Security check failed', ['status' => 403]);
+        }
+
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $transient_key = 'join_rate_' . md5($ip);
+        $attempts = (int) get_transient($transient_key);
+
+        if ($attempts >= 5) {
+            return new \WP_Error('rate_limit', 'Too many attempts. Please try again later.', ['status' => 429]);
+        }
+
+        set_transient($transient_key, $attempts + 1, 5 * MINUTE_IN_SECONDS);
+
+        return true;
     }
 
     public function join_fopsco($request) {
@@ -27,19 +47,19 @@ class JoinMember {
 
         $allowed_member_types = ['regular', 'associate'];
         if (!in_array($member_type, $allowed_member_types)) {
-            return new WP_Error('invalid_member_type', 'Invalid member type.', ['status' => 400]);
+            return new \WP_Error('invalid_member_type', 'Invalid member type.', ['status' => 400]);
         }
 
         if (!is_email($email)) {
-            return new WP_Error('invalid_email', 'Invalid email format.', ['status' => 400]);
+            return new \WP_Error('invalid_email', 'Invalid email format.', ['status' => 400]);
         }
 
         if (email_exists($email) || username_exists($email)) {
-            return new WP_Error('email_exists', 'Email already registered.', ['status' => 400]);
+            return new \WP_Error('email_exists', 'Email already registered.', ['status' => 400]);
         }
 
         if (strlen($password) < 8) {
-            return new WP_Error('weak_password', 'Password must be at least 8 characters.', ['status' => 400]);
+            return new \WP_Error('weak_password', 'Password must be at least 8 characters.', ['status' => 400]);
         }
 
         $username = sanitize_user($email, true);
