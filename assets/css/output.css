@@ -314,11 +314,8 @@
 svg#Layer_1 {
   width: 270px;
 }
-#member_type option:first-child {
-  color: currentcolor;
-  @supports (color: color-mix(in lab, red, red)) {
-    color: color-mix(in oklab, currentcolor 50%, transparent);
-  }
+#member_type option:not(:first-child) {
+  color: #182955;
 }
 .con {
   animation: spin 60s linear infinite;
