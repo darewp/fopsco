@@ -7,7 +7,6 @@ get_header();
     <div class="flex flex-wrap justify-center">
         <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
             <h2 class="text-2xl text-[#182955] font-bold text-center">Join</h2>
-            <img src="/fopsco/wp-content/themes/fopsco/assets/img/FOPSCo-2025.svg" alt="FOPSCo" class="w-34 mx-auto mb-4">
             <?php echo file_get_contents(get_template_directory() . '/assets/img/FOPSCo-2025-logo.svg'); ?>
 
             
