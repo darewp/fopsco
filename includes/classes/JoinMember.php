@@ -6,7 +6,7 @@ class JoinMember {
     use Singleton;
 
     public function __construct() {
-        add_action('wp_enqueue_scripts', [$this, 'join_member']);
+        add_action('rest_api_init', [$this, 'join_member']);
     }
 
     public function join_member() {
@@ -18,16 +18,15 @@ class JoinMember {
     }
 
     public function join_fopsco($request) {
-        $first_name  = sanitize_text_field($request['first_name']);
-        $last_name   = sanitize_text_field($request['last_name']);
-        $contact     = sanitize_text_field($request['contact']);
-        $member_type = sanitize_text_field($request['member_type']);
-        $email       = sanitize_email($request['email']);
+        $first_name  = sanitize_text_field(trim($request['first_name']));
+        $last_name   = sanitize_text_field(trim($request['last_name']));
+        $contact     = sanitize_text_field(trim($request['contact']));
+        $member_type = strtolower(sanitize_text_field(trim($request['member_type'])));
+        $email       = sanitize_email(trim($request['email']));
         $password    = $request['password'];
 
-
         $allowed_member_types = ['regular', 'associate'];
-        if (!in_array(strtolower($member_type), $allowed_member_types)) {
+        if (!in_array($member_type, $allowed_member_types)) {
             return new WP_Error('invalid_member_type', 'Invalid member type.', ['status' => 400]);
         }
 
@@ -43,7 +42,6 @@ class JoinMember {
             return new WP_Error('weak_password', 'Password must be at least 8 characters.', ['status' => 400]);
         }
 
-
         $username = sanitize_user($email, true);
 
         $user_id = wp_create_user($username, $password, $email);
@@ -58,7 +56,7 @@ class JoinMember {
         ]);
 
         update_user_meta($user_id, 'contact_number', $contact);
-        update_user_meta($user_id, 'member_type', strtolower($member_type));
+        update_user_meta($user_id, 'member_type', $member_type);
 
         return [
             'success' => true,
