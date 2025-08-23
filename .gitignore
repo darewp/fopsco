@@ -4,6 +4,7 @@ package.json
 package-lock.json
 tailwind.config.js
 postcss.config.js
+build-css
 
 # OS junk
 .DS_Store

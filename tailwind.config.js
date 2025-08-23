@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  
   content: [
     "./*.php",
     "./**/*.php",
@@ -9,8 +8,16 @@ module.exports = {
     "./inc/**/*.php",
     "./template-parts/**/*.php",
   ],
+  safelist: [
+    'ring-orange',
+  ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'orange': '#F85E00',
+        'test-pink': '#ff00ff',
+      },
+    },
   },
   plugins: [],
 }
