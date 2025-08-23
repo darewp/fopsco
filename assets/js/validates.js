@@ -27,7 +27,7 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
     }
 
     try {
-        const res = await fetch("<?php echo site_url('/wp-json/portal/v1/join'); ?>", {
+        const res = await fetch("<?php echo site_url('/wp-json/lodge/v1/join'); ?>", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ first_name, last_name, contact, email, password, member_type })
