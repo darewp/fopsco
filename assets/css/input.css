@@ -3,7 +3,7 @@
 svg#Layer_1 {
     width: 270px;
 }
-#member_type {
+#member_type option:first-child {
     color: color-mix(in oklab, currentcolor 50%, transparent);
 }
 .con {

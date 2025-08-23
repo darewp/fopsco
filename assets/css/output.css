@@ -314,7 +314,7 @@
 svg#Layer_1 {
   width: 270px;
 }
-#member_type {
+#member_type option:first-child {
   color: currentcolor;
   @supports (color: color-mix(in lab, red, red)) {
     color: color-mix(in oklab, currentcolor 50%, transparent);
