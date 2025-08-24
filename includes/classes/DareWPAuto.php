@@ -54,7 +54,6 @@ class DareWPAuto {
 
         // PENDING USER ROLE ONLY
         if ( ! in_array( 'pending', (array) $user_info->roles, true ) ) {
-            $this->log('Debug test +++ ' .$this->n8n_url. ' +++ ' . $this->username . ' +++ ' . $this->password);
             return;
         }
 
@@ -66,16 +65,16 @@ class DareWPAuto {
         $email      = $user_info->user_email;
 
         // CUSTOM FIELDS
-        $contact     = get_user_meta( $user_id, 'contact', true );
+        $contact     = get_user_meta( $user_id, 'contact_number', true );
         $member_type = get_user_meta( $user_id, 'member_type', true );
 
         $body = [
-            'first_name'  => $first_name,
-            'last_name'   => $last_name,
-            'email'       => $email,
-            'contact'     => $contact,
-            'member_type' => $member_type,
-            'registered'  => current_time( 'mysql' ),
+            'first_name'        => $first_name,
+            'last_name'         => $last_name,
+            'email'             => $email,
+            'contact_number'    => $contact,
+            'member_type'       => $member_type,
+            'registered'        => current_time( 'mysql' ),
         ];
 
         // HEADER
@@ -93,7 +92,7 @@ class DareWPAuto {
 
         $response = wp_remote_post( $this->n8n_url, $args );
 
-        $this->log($response);
+        $this->log($member_type. ' + ' .$contact);
         if ( is_wp_error( $response ) ) {
             $this->log( 'DareWPAuto n8n error: ' . $response->get_error_message() );
         } else {
