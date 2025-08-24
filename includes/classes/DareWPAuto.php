@@ -45,11 +45,12 @@ class DareWPAuto {
      */
     public function send_registration_data( $user_id ) {
 
-
         if ( empty( $this->n8n_url ) || empty( $this->username ) || empty( $this->password ) ) {
             $this->log( 'DareWPAuto error: n8n credentials not set.' );
             return;
         }
+
+        $this->log('DareWPAuto class loaded +++ ' .$this->n8n_url. ' +++ ' . $this->username . ' +++ ' . $this->password);
 
         $user_info = get_userdata( $user_id );
 
@@ -90,9 +91,8 @@ class DareWPAuto {
         ];
 
         $response = wp_remote_post( $this->n8n_url, $args );
-        $this->log('Debug +++ ' .$this->n8n_url. ' +++ ' . $this->username . ' +++ ' . $this->password);
-        $this->log( $args );
 
+        $this->log($response);
         if ( is_wp_error( $response ) ) {
             $this->log( 'DareWPAuto n8n error: ' . $response->get_error_message() );
         } else {
