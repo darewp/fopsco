@@ -69,7 +69,7 @@ class DareWPAuto {
         $contact     = get_user_meta($user_id, 'contact_number', true) ?: '';
         $member_type = get_user_meta($user_id, 'member_type', true) ?: '';
 
-        $this->log("DareWPAuto debug: user_id=$user_id, contact=$contact, member_type=$member_type");
+        //$this->log("DareWPAuto debug: user_id=$user_id, contact=$contact, member_type=$member_type");
 
         $body = [
             'first_name'     => $first_name,
