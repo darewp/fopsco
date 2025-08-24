@@ -6,24 +6,25 @@ class JoinMember {
     use Singleton;
 
     public function __construct() {
-        add_action('rest_api_init', [$this, 'join_member']);
+        add_action('rest_api_init', [$this, 'register_routes']);
     }
 
-    public function join_member() {
+    public function register_routes() {
         register_rest_route('lodge/v1', '/join', [
-            'methods' => 'POST',
-            'callback' => [$this, 'join_fopsco'],
+            'methods'             => 'POST',
+            'callback'            => [$this, 'join_fopsco'],
             'permission_callback' => [$this, 'verify_nonce_and_rate_limit'],
         ]);
     }
 
     public function verify_nonce_and_rate_limit($request) {
-        
+        // Nonce check
         $nonce = $request->get_header('X-WP-Nonce');
         if (!$nonce || !wp_verify_nonce($nonce, 'wp_rest')) {
             return new \WP_Error('invalid_nonce', 'Security check failed', ['status' => 403]);
         }
 
+        // Simple IP-based rate limiting
         $ip = $_SERVER['REMOTE_ADDR'];
         $transient_key = 'join_rate_' . md5($ip);
         $attempts = (int) get_transient($transient_key);
@@ -45,11 +46,13 @@ class JoinMember {
         $email       = sanitize_email(trim($request['email']));
         $password    = $request['password'];
 
+        // Validate member type
         $allowed_member_types = ['regular', 'associate'];
         if (!in_array($member_type, $allowed_member_types)) {
             return new \WP_Error('invalid_member_type', 'Invalid member type.', ['status' => 400]);
         }
 
+        // Validate email
         if (!is_email($email)) {
             return new \WP_Error('invalid_email', 'Invalid email format.', ['status' => 400]);
         }
@@ -58,27 +61,28 @@ class JoinMember {
             return new \WP_Error('email_exists', 'Email already registered.', ['status' => 400]);
         }
 
+        // Validate password
         if (strlen($password) < 8) {
             return new \WP_Error('weak_password', 'Password must be at least 8 characters.', ['status' => 400]);
         }
 
         $username = sanitize_user($email, true);
 
-        $user_id = wp_create_user($username, $password, $email);
+        // Create user with pending role immediately
+        $user_id = wp_insert_user([
+            'user_login' => $username,
+            'user_pass'  => $password,
+            'user_email' => $email,
+            'first_name' => $first_name,
+            'last_name'  => $last_name,
+            'role'       => 'pending', // sets role at creation
+        ]);
+
         if (is_wp_error($user_id)) {
             return $user_id;
         }
 
-        // PENDING
-        $user = new \WP_User($user_id);
-        $user->set_role('pending');
-
-        wp_update_user([
-            'ID'         => $user_id,
-            'first_name' => $first_name,
-            'last_name'  => $last_name,
-        ]);
-
+        // Add extra user meta
         update_user_meta($user_id, 'contact_number', $contact);
         update_user_meta($user_id, 'member_type', $member_type);
 
