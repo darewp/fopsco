@@ -45,7 +45,7 @@ class DareWPAuto {
      */
     public function send_registration_data( $user_id ) {
 
-        $this->log('DareWPAuto class loaded +++ ' .$this->n8n_url);
+        $this->log('DareWPAuto class loaded +++ ' .$this->n8n_url. ' +++ ' . $this->username . ' +++ ' . $this->password);
 
 
         if ( empty( $this->n8n_url ) || empty( $this->username ) || empty( $this->password ) ) {
