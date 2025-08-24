@@ -16,7 +16,7 @@ class DareWPAuto {
         $this->username = defined( 'DAREWP_N8N_USER' ) ? DAREWP_N8N_USER : '';
         $this->password = defined( 'DAREWP_N8N_PASS' ) ? DAREWP_N8N_PASS : '';
 
-        $this->log('DareWPAuto class loaded + ' .$this->n8n_url);
+        $this->log('DareWPAuto class loaded ++ ' .$this->n8n_url);
 
         add_action( 'user_register', [ $this, 'send_registration_data' ], 10, 1 );
     }
