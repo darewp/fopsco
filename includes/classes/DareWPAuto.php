@@ -2,7 +2,7 @@
 namespace Fopsco\Classes;
 use Fopsco\Traits\Singleton;
 
-class DareWPAuto {{
+class DareWPAuto {
     use Singleton;
 
     private $n8n_url;
