@@ -13,4 +13,6 @@ require get_template_directory() . '/includes/classes/DareWPAuto.php';
 \Fopsco\Classes\AssetLoader::get_instance();
 \Fopsco\Classes\SVGSupport::get_instance();
 \Fopsco\Classes\JoinMember::get_instance();
-\Fopsco\Classes\DareWPAuto::get_instance();
+add_action('after_setup_theme', function() {
+    \Fopsco\Classes\DareWPAuto::get_instance();
+});
