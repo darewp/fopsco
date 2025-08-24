@@ -13,5 +13,8 @@ trait Singleton {
 
     private function __construct() {}
     private function __clone() {}
-    private function __wakeup() {}
+    
+    public function __wakeup() {
+        throw new \Exception("Cannot unserialize a singleton.");
+    }
 }
