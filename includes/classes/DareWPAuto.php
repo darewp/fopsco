@@ -52,12 +52,14 @@ class DareWPAuto {
 
         $user_info = get_userdata( $user_id );
 
+
+        $this->log('Debug +++ ' .$this->n8n_url. ' +++ ' . $this->username . ' +++ ' . $this->password);
+
+
         // PENDING USER ROLE ONLY
         if ( ! in_array( 'pending', (array) $user_info->roles, true ) ) {
             return;
         }
-
-        $this->log('Debug +++ ' .$this->n8n_url. ' +++ ' . $this->username . ' +++ ' . $this->password);
 
         // WP USER META
         $first_name = get_user_meta( $user_id, 'first_name', true );
