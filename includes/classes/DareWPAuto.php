@@ -57,7 +57,7 @@ class DareWPAuto {
             return;
         }
 
-        $this->log('DareWPAuto class loaded +++ ' .$this->n8n_url. ' +++ ' . $this->username . ' +++ ' . $this->password);
+        $this->log('Debug +++ ' .$this->n8n_url. ' +++ ' . $this->username . ' +++ ' . $this->password);
 
         // WP USER META
         $first_name = get_user_meta( $user_id, 'first_name', true );
