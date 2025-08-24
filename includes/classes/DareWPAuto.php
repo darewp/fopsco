@@ -19,13 +19,32 @@ class DareWPAuto {
     }
 
     /**
+     * Custom logger to force writing into wp-content/debug.log
+     *
+     * @param mixed $message
+     */
+    private function log( $message ) {
+        $log_file = WP_CONTENT_DIR . '/debug.log';
+
+        if ( is_array( $message ) || is_object( $message ) ) {
+            $message = print_r( $message, true );
+        }
+
+        file_put_contents(
+            $log_file,
+            '[' . date( 'Y-m-d H:i:s' ) . '] ' . $message . PHP_EOL,
+            FILE_APPEND
+        );
+    }
+
+    /**
      * Fires when a new user is registered.
      *
      * @param int $user_id
      */
     public function send_registration_data( $user_id ) {
         if ( empty( $this->n8n_url ) || empty( $this->username ) || empty( $this->password ) ) {
-            error_log( 'DareWPAuto error: n8n credentials not set.' );
+            $this->log( 'DareWPAuto error: n8n credentials not set.' );
             return;
         }
 
@@ -70,15 +89,15 @@ class DareWPAuto {
         $response = wp_remote_post( $this->n8n_url, $args );
 
         if ( is_wp_error( $response ) ) {
-            error_log( 'DareWPAuto n8n error: ' . $response->get_error_message() );
+            $this->log( 'DareWPAuto n8n error: ' . $response->get_error_message() );
         } else {
             $status_code = wp_remote_retrieve_response_code( $response );
             $resp_body   = wp_remote_retrieve_body( $response );
 
             if ( $status_code >= 200 && $status_code < 300 ) {
-                error_log( 'DareWPAuto success: Data sent successfully. Response: ' . $resp_body );
+                $this->log( 'DareWPAuto success: Data sent successfully. Response: ' . $resp_body );
             } else {
-                error_log( 'DareWPAuto n8n error: Unexpected status ' . $status_code . ' - ' . $resp_body );
+                $this->log( 'DareWPAuto n8n error: Unexpected status ' . $status_code . ' - ' . $resp_body );
             }
         }
     }
