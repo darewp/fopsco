@@ -90,9 +90,10 @@ class DareWPAuto {
             'timeout' => 15,
         ];
 
-        // $response = wp_remote_post( $this->n8n_url, $args );
+        $response = wp_remote_post( $this->n8n_url, $args );
 
-        $this->log(var_dump($member_type). ' + ' .var_dump($contact));
+        $this->log($responsive);
+        
         // if ( is_wp_error( $response ) ) {
         //     $this->log( 'DareWPAuto n8n error: ' . $response->get_error_message() );
         // } else {
