@@ -15,12 +15,5 @@ add_action('after_setup_theme', function() {
     \Fopsco\Classes\AssetLoader::get_instance();
     \Fopsco\Classes\SVGSupport::get_instance();
     \Fopsco\Classes\JoinMember::get_instance();
-    $darewp = \Fopsco\Classes\DareWPAuto::get_instance();
-
-    // Debug: check if constants are available
-    if ( defined('DAREWP_N8N_URL') ) {
-        $darewp->log('DAREWP_N8N_URL = ' . DAREWP_N8N_URL);
-    } else {
-        $darewp->log('DAREWP_N8N_URL NOT DEFINED!');
-    }
+    \Fopsco\Classes\DareWPAuto::get_instance();
 });
