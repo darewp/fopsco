@@ -90,20 +90,20 @@ class DareWPAuto {
             'timeout' => 15,
         ];
 
-        $response = wp_remote_post( $this->n8n_url, $args );
+        // $response = wp_remote_post( $this->n8n_url, $args );
 
-        $this->log($member_type. ' + ' .$contact);
-        if ( is_wp_error( $response ) ) {
-            $this->log( 'DareWPAuto n8n error: ' . $response->get_error_message() );
-        } else {
-            $status_code = wp_remote_retrieve_response_code( $response );
-            $resp_body   = wp_remote_retrieve_body( $response );
+        $this->log(var_dump($member_type). ' + ' .var_dump($contact));
+        // if ( is_wp_error( $response ) ) {
+        //     $this->log( 'DareWPAuto n8n error: ' . $response->get_error_message() );
+        // } else {
+        //     $status_code = wp_remote_retrieve_response_code( $response );
+        //     $resp_body   = wp_remote_retrieve_body( $response );
 
-            if ( $status_code >= 200 && $status_code < 300 ) {
-                $this->log( 'DareWPAuto success: Data sent successfully. Response: ' . $resp_body );
-            } else {
-                $this->log( 'DareWPAuto n8n error: Unexpected status ' . $status_code . ' - ' . $resp_body );
-            }
-        }
+        //     if ( $status_code >= 200 && $status_code < 300 ) {
+        //         $this->log( 'DareWPAuto success: Data sent successfully. Response: ' . $resp_body );
+        //     } else {
+        //         $this->log( 'DareWPAuto n8n error: Unexpected status ' . $status_code . ' - ' . $resp_body );
+        //     }
+        // }
     }
 }
