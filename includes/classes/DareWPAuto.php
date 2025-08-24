@@ -31,7 +31,7 @@ class DareWPAuto {
 
         $user_info = get_userdata( $user_id );
 
-        // PENDING USER ROLE ONLY, SO WE DONT SEND ADMIN OR OTHER ROLES
+        // PENDING USER ROLE ONLY
         if ( ! in_array( 'pending', (array) $user_info->roles, true ) ) {
             return;
         }
@@ -54,7 +54,7 @@ class DareWPAuto {
             'registered'  => current_time( 'mysql' ),
         ];
 
-        // HAEDER
+        // HEADER
         $auth = base64_encode( $this->username . ':' . $this->password );
 
         $args = [
@@ -72,8 +72,14 @@ class DareWPAuto {
         if ( is_wp_error( $response ) ) {
             error_log( 'DareWPAuto n8n error: ' . $response->get_error_message() );
         } else {
-            error_log( 'DareWPAuto n8n response: ' . wp_remote_retrieve_body( $response ) );
+            $status_code = wp_remote_retrieve_response_code( $response );
+            $resp_body   = wp_remote_retrieve_body( $response );
+
+            if ( $status_code >= 200 && $status_code < 300 ) {
+                error_log( 'DareWPAuto success: Data sent successfully. Response: ' . $resp_body );
+            } else {
+                error_log( 'DareWPAuto n8n error: Unexpected status ' . $status_code . ' - ' . $resp_body );
+            }
         }
     }
 }
-
