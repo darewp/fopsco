@@ -92,8 +92,8 @@ class DareWPAuto {
 
         $response = wp_remote_post( $this->n8n_url, $args );
 
-        $this->log($responsive);
-        
+        $this->log($response);
+
         // if ( is_wp_error( $response ) ) {
         //     $this->log( 'DareWPAuto n8n error: ' . $response->get_error_message() );
         // } else {
