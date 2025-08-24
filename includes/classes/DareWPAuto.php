@@ -10,7 +10,7 @@ class DareWPAuto {
     private $password;
 
     public function __construct() {
-        // Pull values from wp-config.php constants
+        // DEFINED IN WPCONFIG
         $this->n8n_url  = defined( 'DAREWP_N8N_URL' ) ? DAREWP_N8N_URL : '';
         $this->username = defined( 'DAREWP_N8N_USER' ) ? DAREWP_N8N_USER : '';
         $this->password = defined( 'DAREWP_N8N_PASS' ) ? DAREWP_N8N_PASS : '';
