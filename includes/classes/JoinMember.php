@@ -5,6 +5,9 @@ use Fopsco\Traits\Singleton;
 class JoinMember {
     use Singleton;
 
+    // Toggle this: 'dev' for testing, 'prod' for live
+    private $mode = 'dev';
+
     public function __construct() {
         add_action('rest_api_init', [$this, 'register_routes']);
     }
@@ -18,18 +21,21 @@ class JoinMember {
     }
 
     public function verify_nonce_and_rate_limit($request) {
-        // Custom nonce header
         $nonce = $request->get_header('X-Lodge-Nonce');
         if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_form')) {
             return new \WP_Error('invalid_nonce', 'Security check failed.', ['status' => 403]);
         }
 
-        // Honeypot check
         if (!empty($request['website'])) {
             return new \WP_Error('spam_detected', 'Bots not allowed.', ['status' => 400]);
         }
 
-        // Rate limiting (5 minutes, 20 attempts max)
+        // Skip or relax rate limiting if dev mode
+        if ($this->mode === 'dev') {
+            return true;
+        }
+
+        // Production rate limit
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $transient_key = 'join_rate_' . md5($ip);
         $attempts = (int) get_transient($transient_key);
