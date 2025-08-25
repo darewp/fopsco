@@ -34,7 +34,7 @@ class JoinMember {
             $transient_key = 'join_rate_' . md5($ip);
             $attempts = (int) get_transient($transient_key);
 
-            if ($attempts >= 20) {
+            if ($attempts >= 5){
                 return new \WP_Error('rate_limit', 'Too many attempts. Please try again later.', ['status' => 429]);
             }
 
