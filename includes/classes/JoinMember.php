@@ -16,11 +16,12 @@ class JoinMember {
         register_rest_route('lodge/v1', '/join', [
             'methods'             => 'POST',
             'callback'            => [$this, 'join_fopsco'],
-            'permission_callback' => [$this, 'verify_nonce_and_rate_limit'],
+            'permission_callback' => '__return_true', // always allow, we'll handle security in callback
         ]);
     }
 
-    public function verify_nonce_and_rate_limit($request) {
+    public function join_fopsco($request) {
+        // --- Security checks ---
         $nonce = $request->get_header('X-Lodge-Nonce');
         if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_form')) {
             return new \WP_Error('invalid_nonce', 'Security check failed.', ['status' => 403]);
@@ -30,25 +31,20 @@ class JoinMember {
             return new \WP_Error('spam_detected', 'Bots not allowed.', ['status' => 400]);
         }
 
-        // Skip or relax rate limiting if dev mode
-        if ($this->mode === 'dev') {
-            return true;
+        // Rate limiting
+        if ($this->mode !== 'dev') {
+            $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            $transient_key = 'join_rate_' . md5($ip);
+            $attempts = (int) get_transient($transient_key);
+
+            if ($attempts >= 20) {
+                return new \WP_Error('rate_limit', 'Too many attempts. Please try again later.', ['status' => 429]);
+            }
+
+            set_transient($transient_key, $attempts + 1, 5 * MINUTE_IN_SECONDS);
         }
 
-        // Production rate limit
-        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        $transient_key = 'join_rate_' . md5($ip);
-        $attempts = (int) get_transient($transient_key);
-
-        if ($attempts >= 20) {
-            return new \WP_Error('rate_limit', 'Too many attempts. Please try again later.', ['status' => 429]);
-        }
-
-        set_transient($transient_key, $attempts + 1, 5 * MINUTE_IN_SECONDS);
-        return true;
-    }
-
-    public function join_fopsco($request) {
+        // --- Validation ---
         $first_name  = sanitize_text_field(trim($request['first_name'] ?? ''));
         $last_name   = sanitize_text_field(trim($request['last_name'] ?? ''));
         $contact     = sanitize_text_field(trim($request['contact'] ?? ''));
