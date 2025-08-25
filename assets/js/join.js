@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-WP-Nonce": lodgeSettings.nonce,
+                    "X-Lodge-Nonce": lodgeSettings.nonce,
                 },
                 body: JSON.stringify(payload),
             });
