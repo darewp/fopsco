@@ -16,12 +16,12 @@ class JoinMember {
         register_rest_route('lodge/v1', '/join', [
             'methods'             => 'POST',
             'callback'            => [$this, 'join_fopsco'],
-            'permission_callback' => '__return_true', // always allow, we'll handle security in callback
+            'permission_callback' => '__return_true', // PUBLIC
         ]);
     }
 
     public function join_fopsco($request) {
-        // --- Security checks ---
+        
         $nonce = $request->get_header('X-Lodge-Nonce');
         if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_form')) {
             return new \WP_Error('invalid_nonce', 'Security check failed.', ['status' => 403]);
@@ -31,7 +31,6 @@ class JoinMember {
             return new \WP_Error('spam_detected', 'Bots not allowed.', ['status' => 400]);
         }
 
-        // Rate limiting
         if ($this->mode !== 'dev') {
             $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
             $transient_key = 'join_rate_' . md5($ip);
@@ -43,8 +42,7 @@ class JoinMember {
 
             set_transient($transient_key, $attempts + 1, 5 * MINUTE_IN_SECONDS);
         }
-
-        // --- Validation ---
+        // DEPENDET TO VALIDATION ENQUEUED IN JS
         $first_name  = sanitize_text_field(trim($request['first_name'] ?? ''));
         $last_name   = sanitize_text_field(trim($request['last_name'] ?? ''));
         $contact     = sanitize_text_field(trim($request['contact'] ?? ''));
