@@ -29,15 +29,13 @@ class JoinMember {
             return new \WP_Error('spam_detected', 'Bots not allowed.', ['status' => 400]);
         }
 
-        if ($this->mode !== 'dev') {
+        if ($this->mode === 'prod') {
             $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
             $transient_key = 'join_rate_' . md5($ip);
             $attempts = (int) get_transient($transient_key);
-
-            if ($attempts >= 5){
+            if ($attempts >= 20) {
                 return new \WP_Error('rate_limit', 'Too many attempts. Please try again later.', ['status' => 429]);
             }
-
             set_transient($transient_key, $attempts + 1, 5 * MINUTE_IN_SECONDS);
         }
 
