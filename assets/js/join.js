@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("joinForm");
     const errorsDiv = document.getElementById("errors");
+    const submitBtn = form.querySelector("button[type='submit']");
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -17,6 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
             website: document.getElementById("website").value,
         };
 
+        // 🔄 set loading state
+        submitBtn.disabled = true;
+        submitBtn.dataset.originalText = submitBtn.textContent;
+        submitBtn.textContent = "Joining...";
+
         try {
             const res = await fetch("/wp-json/lodge/v1/join", {
                 method: "POST",
@@ -30,21 +36,31 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
 
             if (!res.ok) {
+                errorsDiv.classList.remove("text-green-600");
+                errorsDiv.classList.add("text-red-600");
                 errorsDiv.textContent = data.message || "Something went wrong.";
                 return;
             }
 
-            // ✅ Success flow
+            // ✅ success flow
             errorsDiv.classList.remove("text-red-600");
             errorsDiv.classList.add("text-green-600", "font-medium");
-            errorsDiv.textContent = "You just joined FOPSCo, Redirecting...";
+            errorsDiv.textContent = "🎉 Registration successful! Redirecting...";
 
             setTimeout(() => {
                 window.location.href = "/welcome";
             }, 2000);
 
         } catch (err) {
+            errorsDiv.classList.remove("text-green-600");
+            errorsDiv.classList.add("text-red-600");
             errorsDiv.textContent = "Server error. Please try again.";
+        } finally {
+            // 🔄 reset button if not redirected yet
+            if (!form.classList.contains("redirecting")) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = submitBtn.dataset.originalText;
+            }
         }
     });
 });
