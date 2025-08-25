@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // ✅ success flow
             errorsDiv.classList.remove("text-red-600");
             errorsDiv.classList.add("text-green-600", "font-medium");
-            errorsDiv.textContent = "🎉 Registration successful! Redirecting...";
+            errorsDiv.textContent = "You just joined FOPSCo! Redirecting...";
 
             setTimeout(() => {
                 window.location.href = "/welcome";
