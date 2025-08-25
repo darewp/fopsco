@@ -5,7 +5,6 @@ use Fopsco\Traits\Singleton;
 class JoinMember {
     use Singleton;
 
-    // Toggle this: 'dev' for testing, 'prod' for live
     private $mode = 'dev';
 
     public function __construct() {
@@ -16,12 +15,11 @@ class JoinMember {
         register_rest_route('lodge/v1', '/join', [
             'methods'             => 'POST',
             'callback'            => [$this, 'join_fopsco'],
-            'permission_callback' => '__return_true', // PUBLIC
+            'permission_callback' => [$this, 'check_permissions'],
         ]);
     }
 
-    public function join_fopsco($request) {
-        
+    public function check_permissions($request) {
         $nonce = $request->get_header('X-Lodge-Nonce');
         if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_form')) {
             return new \WP_Error('invalid_nonce', 'Security check failed.', ['status' => 403]);
@@ -42,7 +40,11 @@ class JoinMember {
 
             set_transient($transient_key, $attempts + 1, 5 * MINUTE_IN_SECONDS);
         }
-        // DEPENDET TO VALIDATION ENQUEUED IN JS
+
+        return true;
+    }
+
+    public function join_fopsco($request) {
         $first_name  = sanitize_text_field(trim($request['first_name'] ?? ''));
         $last_name   = sanitize_text_field(trim($request['last_name'] ?? ''));
         $contact     = sanitize_text_field(trim($request['contact'] ?? ''));
