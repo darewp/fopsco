@@ -12,6 +12,8 @@ get_header();
             </div>
             
             <form id="joinForm" class="space-y-4">
+                <?php wp_nonce_field( 'lodge_join_action', 'lodge_join_nonce' ); ?>
+
                 <div>
                     <input type="text" id="first_name" placeholder="First Name" class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none" autocomplete="off" required>
                 </div>
