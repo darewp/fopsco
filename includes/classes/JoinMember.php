@@ -18,16 +18,23 @@ class JoinMember {
     }
 
     public function verify_nonce_and_rate_limit($request) {
-        $nonce = $request->get_header('X-WP-Nonce');
-        if (!$nonce || !wp_verify_nonce($nonce, 'wp_rest')) {
+        // custom nonce header
+        $nonce = $request->get_header('X-Lodge-Nonce');
+        if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_form')) {
             return new \WP_Error('invalid_nonce', 'Security check failed', ['status' => 403]);
         }
 
-        $ip = $_SERVER['REMOTE_ADDR'];
+        // simple honeypot
+        if (!empty($request['website'])) {
+            return new \WP_Error('spam_detected', 'Bots not allowed.', ['status' => 400]);
+        }
+
+        // rate limiting
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $transient_key = 'join_rate_' . md5($ip);
         $attempts = (int) get_transient($transient_key);
 
-        if ($attempts >= 500) {
+        if ($attempts >= 20) {
             return new \WP_Error('rate_limit', 'Too many attempts. Please try again later.', ['status' => 429]);
         }
 
@@ -43,13 +50,11 @@ class JoinMember {
         $email       = sanitize_email(trim($request['email'] ?? ''));
         $password    = $request['password'] ?? '';
 
-        // Validate member type
         $allowed_member_types = ['regular', 'associate'];
         if (!in_array($member_type, $allowed_member_types)) {
             return new \WP_Error('invalid_member_type', 'Invalid member type.', ['status' => 400]);
         }
 
-        // Validate email
         if (!is_email($email)) {
             return new \WP_Error('invalid_email', 'Invalid email format.', ['status' => 400]);
         }
@@ -58,14 +63,12 @@ class JoinMember {
             return new \WP_Error('email_exists', 'Email already registered.', ['status' => 400]);
         }
 
-        // Validate password
         if (strlen($password) < 8) {
             return new \WP_Error('weak_password', 'Password must be at least 8 characters.', ['status' => 400]);
         }
 
         $username = sanitize_user($email, true);
 
-        // Create user with meta at creation
         $user_id = wp_insert_user([
             'user_login' => $username,
             'user_pass'  => $password,

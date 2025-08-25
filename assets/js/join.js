@@ -18,7 +18,7 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
     if (validator.isEmpty(last_name)) errors.push("Last name is required.");
     if (!validator.isMobilePhone(contact, 'any')) errors.push("Enter a valid contact number.");
     if (!validator.isEmail(email)) errors.push("Enter a valid email.");
-    if (validator.isEmpty(member_type)) errors.push("Member type is required."); 
+    if (validator.isEmpty(member_type)) errors.push("Member type is required.");
     if (!validator.isLength(password, { min: 8 })) errors.push("Password must be at least 8 characters.");
     if (password !== confirm) errors.push("Passwords do not match.");
     if (website) errors.push("bots");
@@ -31,7 +31,10 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
     try {
         const res = await fetch('/wp-json/lodge/v1/join', {
             method: "POST",
-            headers: { "Content-Type": "application/json",  "X-WP-Nonce": wpApiSettings.nonce },
+            headers: { 
+                "Content-Type": "application/json",
+                "X-Lodge-Nonce": lodgeSettings.nonce
+            },
             body: JSON.stringify({ first_name, last_name, contact, email, password, member_type, website })
         });
 
