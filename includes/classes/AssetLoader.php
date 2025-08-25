@@ -43,7 +43,8 @@ class AssetLoader {
 
         // custom nonce for public form
         wp_localize_script('fopsco-join', 'lodgeSettings', [
-            'nonce' => wp_create_nonce('lodge_join_form')
+            'nonce' => wp_create_nonce('lodge_join_form'),
+            'restUrl' => esc_url_raw(rest_url('lodge/v1/join'))
         ]);
     }
 }

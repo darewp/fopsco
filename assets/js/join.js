@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         submitBtn.textContent = "Joining...";
 
         try {
-            const res = await fetch("/wp-json/lodge/v1/join", {
+            const res = await fetch(lodgeSettings.restUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

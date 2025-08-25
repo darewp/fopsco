@@ -18,18 +18,18 @@ class JoinMember {
     }
 
     public function verify_nonce_and_rate_limit($request) {
-        // custom nonce header
+        // Custom nonce header
         $nonce = $request->get_header('X-Lodge-Nonce');
         if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_form')) {
-            return new \WP_Error('invalid_nonce', 'Security check failed', ['status' => 403]);
+            return new \WP_Error('invalid_nonce', 'Security check failed.', ['status' => 403]);
         }
 
-        // simple honeypot
+        // Honeypot check
         if (!empty($request['website'])) {
             return new \WP_Error('spam_detected', 'Bots not allowed.', ['status' => 400]);
         }
 
-        // rate limiting
+        // Rate limiting (5 minutes, 20 attempts max)
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $transient_key = 'join_rate_' . md5($ip);
         $attempts = (int) get_transient($transient_key);
@@ -51,7 +51,7 @@ class JoinMember {
         $password    = $request['password'] ?? '';
 
         $allowed_member_types = ['regular', 'associate'];
-        if (!in_array($member_type, $allowed_member_types)) {
+        if (!in_array($member_type, $allowed_member_types, true)) {
             return new \WP_Error('invalid_member_type', 'Invalid member type.', ['status' => 400]);
         }
 
@@ -88,7 +88,7 @@ class JoinMember {
 
         return [
             'success' => true,
-            'message' => 'You have now Joined FOPSCo!',
+            'message' => 'You have now joined FOPSCo!',
             'user_id' => $user_id,
         ];
     }
