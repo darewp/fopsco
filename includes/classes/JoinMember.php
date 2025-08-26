@@ -45,7 +45,7 @@ class JoinMember {
     public function join_fopsco($request) {
         $first_name  = sanitize_text_field(trim($request['first_name'] ?? ''));
         $last_name   = sanitize_text_field(trim($request['last_name'] ?? ''));
-        $contact     = sanitize_text_field(trim($request['contact'] ?? ''));
+        $contact     = sanitize_text_field(trim($request['phone_number'] ?? ''));
         $member_type = strtolower(sanitize_text_field(trim($request['member_type'] ?? '')));
         $email       = sanitize_email(trim($request['email'] ?? ''));
         $password    = $request['password'] ?? '';
@@ -77,7 +77,7 @@ class JoinMember {
             'last_name'  => $last_name,
             'role'       => 'pending',
             'meta_input' => [
-                'contact_number' => $contact,
+                'phone_number' => $contact,
                 'member_type'    => $member_type,
             ],
         ]);
