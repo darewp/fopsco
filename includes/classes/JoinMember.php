@@ -19,6 +19,20 @@ class JoinMember {
         ]);
     }
 
+    private function log($message) {
+        $log_file = WP_CONTENT_DIR . '/debug.log';
+
+        if (is_array($message) || is_object($message)) {
+            $message = print_r($message, true);
+        }
+
+        file_put_contents(
+            $log_file,
+            '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
+            FILE_APPEND
+        );
+    }
+
     public function check_permissions($request) {
         $nonce = $request->get_header('X-Lodge-Nonce');
         if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_form')) {
@@ -68,7 +82,7 @@ class JoinMember {
         }
 
         $username = sanitize_user($email, true);
-        error_log($contact);
+        $this->log($contact);
         $user_id = wp_insert_user([
             'user_login' => $username,
             'user_pass'  => $password,
