@@ -75,7 +75,7 @@ class DareWPAuto {
             'first_name'     => $first_name,
             'last_name'      => $last_name,
             'email'          => $email,
-            'phone_number' => $contact,
+            'phone_number'   => $contact,
             'member_type'    => $member_type,
             'registered'     => current_time('mysql'),
         ];
