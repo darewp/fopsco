@@ -100,7 +100,7 @@ class DareWPAuto {
             $resp_body   = wp_remote_retrieve_body($response);
 
             if ($status_code >= 200 && $status_code < 300) {
-                $this->log('DareWPAuto success: Data sent successfully. Response: ' . $body);
+                $this->log('DareWPAuto success: Data sent successfully. Response: ' . print_r($body, true));
             } else {
                 $this->log('DareWPAuto n8n error: Unexpected status ' . $status_code . ' - ' . $resp_body);
             }
