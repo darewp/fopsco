@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const payload = {
             first_name: document.getElementById("first_name").value,
             last_name: document.getElementById("last_name").value,
-            contact: document.getElementById("phone_number").value,
+            phone_number: document.getElementById("phone_number").value,
             email: document.getElementById("email").value,
             member_type: document.getElementById("member_type").value,
             password: document.getElementById("password").value,
