@@ -66,7 +66,7 @@ class DareWPAuto {
         $email      = $user_info->user_email;
 
         // Custom fields
-        $contact     = get_user_meta($user_id, 'contact_number', true) ?: '';
+        $contact     = get_user_meta($user_id, 'phone_number', true) ?: '';
         $member_type = get_user_meta($user_id, 'member_type', true) ?: '';
 
         //$this->log("DareWPAuto debug: user_id=$user_id, contact=$contact, member_type=$member_type");
@@ -75,7 +75,7 @@ class DareWPAuto {
             'first_name'     => $first_name,
             'last_name'      => $last_name,
             'email'          => $email,
-            'contact_number' => $contact,
+            'phone_number' => $contact,
             'member_type'    => $member_type,
             'registered'     => current_time('mysql'),
         ];
