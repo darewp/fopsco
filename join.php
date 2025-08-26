@@ -21,10 +21,10 @@ get_header();
                     <input type="text" id="last_name" placeholder="Last Name" class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none" autocomplete="off" required>
                 </div>
                 <div>
-                    <input type="text" id="phone_number" placeholder="Mobile Number" class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none" autocomplete="off" required>
-                </div>
-                <div>
                     <input type="email" id="email" placeholder="Email Address" class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none" autocomplete="off" required>
+                </div>                
+                <div>
+                    <input type="text" id="phone_number" placeholder="Mobile Number" class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none" autocomplete="off" required>
                 </div>
                 <div>
                     <select id="member_type" class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none" required>
