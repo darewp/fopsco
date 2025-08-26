@@ -68,7 +68,7 @@ class JoinMember {
         }
 
         $username = sanitize_user($email, true);
-
+        DareWPAuto::get_instance()->log($contact);
         $user_id = wp_insert_user([
             'user_login' => $username,
             'user_pass'  => $password,
