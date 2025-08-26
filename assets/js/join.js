@@ -45,9 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
             errorsDiv.classList.add("text-green-600", "font-medium");
             errorsDiv.textContent = "You just joined FOPSCo! Redirecting...";
 
-            setTimeout(() => {
-                window.location.href = "/welcome";
-            }, 2000);
+            // setTimeout(() => {
+            //     window.location.href = "/welcome";
+            // }, 2000);
 
         } catch (err) {
             errorsDiv.classList.remove("text-green-600");
