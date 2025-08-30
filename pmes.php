@@ -13,7 +13,7 @@ if ( ! is_user_logged_in() ) {
 wp_head();
 ?>
 <div class="max-w-7xl mx-auto px-4 min-h-screen flex justify-center align-center">
-    <div class="flex flex-wrap justify-center mt-4">
+    <div class="max-w-md flex flex-wrap justify-center mt-4">
         <div class="relative w-full pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-lg">
             <video 
             id="lessonVideo" 
