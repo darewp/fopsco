@@ -33,13 +33,15 @@ class AssetLoader {
             true
         );
 
-        wp_enqueue_script(
-            'fopsco-join',
-            get_template_directory_uri() . '/assets/js/join.js',
-            ['validator'],
-            filemtime(get_template_directory() . '/assets/js/join.js'),
-            true
-        );
+        if( is_page('join') ){
+            wp_enqueue_script(
+                'fopsco-join',
+                get_template_directory_uri() . '/assets/js/join.js',
+                ['validator'],
+                filemtime(get_template_directory() . '/assets/js/join.js'),
+                true
+            );
+        }
 
         // custom nonce for public form
         wp_localize_script('fopsco-join', 'lodgeSettings', [
