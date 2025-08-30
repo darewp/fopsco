@@ -13,7 +13,7 @@ if ( ! is_user_logged_in() ) {
 wp_head();
 ?>
 
-<div class="max-w-6xl mx-auto px-4">
+<div class="max-w-7xl mx-auto px-4">
     <div class="flex flex-wrap justify-center mt-4">
     <div class="relative pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-lg">
       <video 
