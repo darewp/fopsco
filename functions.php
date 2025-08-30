@@ -9,7 +9,7 @@ require get_template_directory() . '/includes/classes/AssetLoader.php';
 require get_template_directory() . '/includes/classes/SVGSupport.php';
 require get_template_directory() . '/includes/classes/JoinMember.php';
 require get_template_directory() . '/includes/classes/DareWPAuto.php';
-require get_template_directory() . '/includes/classes/VideoTracker.php';
+require get_template_directory() . '/includes/classes/TrackVideo.php';
 
 
 \Fopsco\Classes\AssetLoader::get_instance();
