@@ -10,7 +10,7 @@ if ( ! is_user_logged_in() ) {
     wp_redirect( wp_login_url( get_permalink() ) );
     exit;
 }
-wp_head()
+wp_head();
 ?>
 
 <div class="flex justify-center items-center px-4 py-8">
