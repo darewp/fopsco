@@ -18,7 +18,7 @@ wp_head();
     <video 
       id="lessonVideo" 
       controls 
-      class="absolute top-0 left-0 w-full h-full rounded-2xl"
+      class="absolute top-5 left-0 w-full h-full rounded-2xl"
     >
       <source src="https://portal.smrmnt.com/wp-content/uploads/2025/08/Pre-membership-Education-Seminar-Video.mp4" type="video/mp4">
       Your browser does not support the video tag.
