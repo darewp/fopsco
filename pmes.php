@@ -12,20 +12,21 @@ if ( ! is_user_logged_in() ) {
 }
 wp_head();
 ?>
-<div class="max-w-7xl mx-auto px-4 flex justify-center align-center">
-    <div class="min-h-screen flex flex-wrap justify-center align-center mt-4">
-        <div class="relative w-full pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-lg">
-            <video 
-            id="lessonVideo" 
-            controls 
-            class="absolute top-5 left-0 w-full h-full rounded-2xl"
-            >
-            <source src="https://portal.smrmnt.com/wp-content/uploads/2025/08/Pre-membership-Education-Seminar-Video.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-            </video>
-        </div>
+<div class="max-w-7xl mx-auto px-4 flex justify-center items-center">
+  <div class="min-h-screen flex flex-wrap justify-center align-center mt-4 w-2/3">
+    <div class="relative w-full pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-lg">
+      <video 
+        id="lessonVideo" 
+        controls 
+        class="absolute top-0 left-0 w-full h-full rounded-2xl"
+      >
+        <source src="https://portal.smrmnt.com/wp-content/uploads/2025/08/Pre-membership-Education-Seminar-Video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
     </div>
+  </div>
 </div>
+
 
 
 <?php
