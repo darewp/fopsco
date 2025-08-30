@@ -14,7 +14,7 @@ wp_head();
 ?>
 
 <div class="max-w-[60rem] mx-auto px-4 min-h-screen flex items-center justify-center">
-  <div class="relative w-full max-w-4xl pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-lg">
+  <div class="relative w-full pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-lg">
     <video 
       id="lessonVideo" 
       controls 
