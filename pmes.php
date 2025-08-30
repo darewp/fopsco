@@ -14,7 +14,7 @@ wp_head();
 ?>
 
 <div class="flex justify-center items-center px-4 py-8">
-  <div class="w-[70%]">
+  <div class="max-w-4xl mx-auto px-4">
     <div class="relative pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-lg">
       <video 
         id="lessonVideo" 
