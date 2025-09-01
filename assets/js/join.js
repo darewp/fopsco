@@ -1,64 +1,50 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("joinForm");
-    const errorsDiv = document.getElementById("errors");
-    const submitBtn = form.querySelector("button[type='submit']");
+    const errorsEl = document.getElementById("errors");
 
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async function (e) {
         e.preventDefault();
-        errorsDiv.textContent = "";
+        errorsEl.textContent = "";
 
-        const payload = {
-            first_name: document.getElementById("first_name").value,
-            last_name: document.getElementById("last_name").value,
-            phone_number: document.getElementById("phone_number").value,
-            email: document.getElementById("email").value,
+        const formData = {
+            first_name: document.getElementById("first_name").value.trim(),
+            last_name: document.getElementById("last_name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            phone_number: document.getElementById("phone_number").value.trim(),
             member_type: document.getElementById("member_type").value,
             password: document.getElementById("password").value,
             confirm: document.getElementById("confirm").value,
-            website: document.getElementById("website").value,
+            website: document.getElementById("website").value
         };
 
-        submitBtn.disabled = true;
-        submitBtn.dataset.originalText = submitBtn.textContent;
-        submitBtn.textContent = "Joining...";
+        if (formData.password !== formData.confirm) {
+            errorsEl.textContent = "Passwords do not match.";
+            return;
+        }
+
+        const nonce = document.getElementById("lodge_join_nonce").value;
 
         try {
-            const res = await fetch(lodgeSettings.restUrl, {
+            const res = await fetch("/wp-json/lodge/v1/join", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-Lodge-Nonce": lodgeSettings.nonce,
+                    "X-Lodge-Nonce": nonce
                 },
-                body: JSON.stringify(payload),
+                body: JSON.stringify(formData)
             });
 
             const data = await res.json();
 
-            if (!res.ok) {
-                errorsDiv.classList.remove("text-green-600");
-                errorsDiv.classList.add("text-red-600");
-                errorsDiv.textContent = data.message || "Something went wrong.";
+            if (!res.ok || data.success === false) {
+                errorsEl.textContent = data.message || "Something went wrong.";
                 return;
             }
 
-            errorsDiv.classList.remove("text-red-600");
-            errorsDiv.classList.add("text-green-600", "font-medium");
-            errorsDiv.textContent = "You just joined FOPSCo! Redirecting...";
-
-            // setTimeout(() => {
-            //     window.location.href = "/welcome";
-            // }, 2000);
-
+            alert(data.message || "Successfully joined!");
+            form.reset();
         } catch (err) {
-            errorsDiv.classList.remove("text-green-600");
-            errorsDiv.classList.add("text-red-600");
-            errorsDiv.textContent = "Server error. Please try again.";
-        } finally {
-            
-            if (!form.classList.contains("redirecting")) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = submitBtn.dataset.originalText;
-            }
+            errorsEl.textContent = "Network error. Please try again.";
         }
     });
 });

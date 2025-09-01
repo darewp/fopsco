@@ -20,17 +20,18 @@ class JoinMember {
     }
 
     public function check_permissions($request) {
-
+        // Read the nonce from header
         $nonce = $request->get_header('X-Lodge-Nonce');
-        
-        if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_action')) {
+        if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_form')) {
             return new \WP_Error('invalid_nonce', 'Security check failed.', ['status' => 403]);
         }
 
+        // Honeypot field check
         if (!empty($request['website'])) {
             return new \WP_Error('spam_detected', 'Bots not allowed.', ['status' => 400]);
         }
 
+        // Optional: basic rate limiting for prod
         if ($this->mode === 'prod') {
             $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
             $transient_key = 'join_rate_' . md5($ip);
@@ -70,7 +71,7 @@ class JoinMember {
         }
 
         $username = sanitize_user($email, true);
-        
+
         $user_id = wp_insert_user([
             'user_login' => $username,
             'user_pass'  => $password,
@@ -80,7 +81,7 @@ class JoinMember {
             'role'       => 'pending',
             'meta_input' => [
                 'phone_number' => $contact,
-                'member_type'    => $member_type,
+                'member_type'  => $member_type,
             ],
         ]);
 
