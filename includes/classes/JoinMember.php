@@ -20,8 +20,10 @@ class JoinMember {
     }
 
     public function check_permissions($request) {
+
         $nonce = $request->get_header('X-Lodge-Nonce');
-        if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_form')) {
+        
+        if (!$nonce || !wp_verify_nonce($nonce, 'lodge_join_action')) {
             return new \WP_Error('invalid_nonce', 'Security check failed.', ['status' => 403]);
         }
 
