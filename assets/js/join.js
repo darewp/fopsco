@@ -2,9 +2,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("joinForm");
     const errorsEl = document.getElementById("errors");
 
+    // Create a success message element
+    const successEl = document.createElement("div");
+    successEl.className = "text-green-600 text-sm mt-2";
+    form.appendChild(successEl);
+
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
         errorsEl.textContent = "";
+        successEl.textContent = "";
 
         const formData = {
             first_name: document.getElementById("first_name").value.trim(),
@@ -41,8 +47,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            alert(data.message || "Successfully joined!");
+            successEl.textContent = "You have successfully joined FOPSCo!";
             form.reset();
+
+            // Uncomment this if you want to redirect after success
+            // setTimeout(() => {
+            //     window.location.href = "/welcome";
+            // }, 2000);
+
         } catch (err) {
             errorsEl.textContent = "Network error. Please try again.";
         }
