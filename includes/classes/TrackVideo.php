@@ -15,23 +15,25 @@ class VideoTracker {
     }
 
     public function enqueue_scripts() {
-        wp_enqueue_script(
-            'video-tracker',
-            get_template_directory_uri() . '/assets/js/pmes-tracker.js',
-            [],
-            wp_get_theme()->get( 'Version' ),
-            true
-        );
+        if ( is_user_logged_in() && is_page( 'pre-membership-education-seminar' ) ) {
+            wp_enqueue_script(
+                'video-tracker',
+                get_template_directory_uri() . '/assets/js/pmes-tracker.js',
+                [],
+                wp_get_theme()->get( 'Version' ),
+                true
+            );
 
-        wp_localize_script(
-            'video-tracker',
-            'VideoTracker',
-            [
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'nonce'   => wp_create_nonce( 'video_tracker_nonce' ),
-                'user_id' => get_current_user_id(),
-            ]
-        );
+            wp_localize_script(
+                'video-tracker',
+                'VideoTracker',
+                [
+                    'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                    'nonce'   => wp_create_nonce( 'video_tracker_nonce' ),
+                    'user_id' => get_current_user_id(),
+                ]
+            );
+        }
     }
 
     public function handle_video_played() {
