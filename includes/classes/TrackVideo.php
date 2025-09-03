@@ -20,7 +20,7 @@ class TrackVideo {
         add_action( 'wp_ajax_video_completed', [ $this, 'handle_video_completed' ] );
 
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] ); 
-        error_log("PMES Log Fallback: ");
+        error_log("PMES Log Fallback initialized");
     }
 
     public function enqueue_scripts() {
@@ -63,7 +63,17 @@ class TrackVideo {
     public function handle_video_completed() {
         $this->verify_nonce();
         error_log('PMES: completed');        
-        $this->trigger_n8n_workflow();
+
+        $user_id = get_current_user_id();
+        $progress = get_user_meta( $user_id, 'pmes_video_progress', true );
+
+        // Only trigger webhook once
+        if ( empty( $progress['completed'] ) || intval( $progress['completed'] ) === 0 ) {
+            $this->trigger_n8n_workflow();
+        } else {
+            error_log("PMES: User {$user_id} already completed, skipping webhook.");
+        }
+
         $this->increment_counter( 'completed' );
     }
 
@@ -99,15 +109,14 @@ class TrackVideo {
     }
     
     private function trigger_n8n_workflow() {
-        
         $user_id = get_current_user_id();
         $user    = get_userdata( $user_id );
-
-        error_log('PMES: '. $user->user_email);
 
         if ( ! $user || empty( $this->pmes_url ) ) {
             return;
         }
+
+        error_log('PMES Trigger: ' . $user->user_email);
 
         $phone_number = get_user_meta( $user_id, 'phone_number', true );
 
