@@ -139,7 +139,7 @@ class VideoTracker {
         ] );
 
         if ( is_wp_error( $response ) ) {
-            error_log( 'PMES n8n webhook failed: ' . $response->get_error_message() );
+            $this->log( 'PMES n8n webhook failed: ' . $response->get_error_message() );
         }
     }
 
