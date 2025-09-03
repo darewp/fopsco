@@ -65,6 +65,20 @@ class VideoTracker {
         $this->trigger_n8n_workflow();
     }
 
+    private function log($message) {
+        $log_file = WP_CONTENT_DIR . '/debug.log';
+
+        if (is_array($message) || is_object($message)) {
+            $message = print_r($message, true);
+        }
+
+        file_put_contents(
+            $log_file,
+            '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
+            FILE_APPEND
+        );
+    }
+
     private function increment_counter( $type ) {
         $user_id = get_current_user_id();
         if ( ! $user_id ) {
@@ -112,8 +126,8 @@ class VideoTracker {
             'timestamp'  => current_time( 'mysql' ),
         ];
 
-        error_log( 'PMES webhook sending: ' . wp_json_encode( $body ) );
-        
+        $this->log('PMES:', $body['user_email']);
+
         $response = wp_remote_post( $this->pmes_url, [
             'method'  => 'POST',
             'headers' => [
