@@ -2,7 +2,7 @@
 namespace Fopsco\Classes;
 use Fopsco\Traits\Singleton;
 
-class VideoTracker {
+class TrackVideo {
     use Singleton;
 
     private $pmes_url; 

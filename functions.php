@@ -16,4 +16,4 @@ require get_template_directory() . '/includes/classes/TrackVideo.php';
 \Fopsco\Classes\SVGSupport::get_instance();
 \Fopsco\Classes\JoinMember::get_instance();
 \Fopsco\Classes\DareWPAuto::get_instance();
-\Fopsco\Classes\VideoTracker::get_instance();
+\Fopsco\Classes\TrackVideo::get_instance();
