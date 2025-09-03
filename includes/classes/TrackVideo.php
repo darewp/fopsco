@@ -30,17 +30,18 @@ class TrackVideo {
             $message = print_r($message, true);
         }
 
-        // Make sure file is writable/creatable
-        if (!file_exists($log_file)) {
-            @file_put_contents($log_file, '');
-        }
+        $entry = '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
 
-        if (is_writable($log_file) || is_writable(dirname($log_file))) {
-            file_put_contents(
-                $log_file,
-                '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
-                FILE_APPEND
-            );
+        // Try to write
+        $result = @file_put_contents($log_file, $entry, FILE_APPEND);
+
+        if ($result === false) {
+            // Fallback: log to PHP error log
+            error_log("TrackVideo log() failed. Tried: $log_file");
+            error_log("Message was: " . $entry);
+
+            // Optional: expose where uploads path points
+            error_log("Upload base dir: " . $upload_dir['basedir']);
         }
     } 
 
