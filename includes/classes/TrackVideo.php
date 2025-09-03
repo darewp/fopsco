@@ -112,8 +112,11 @@ class VideoTracker {
 
     
     private function trigger_n8n_workflow() {
+        
         $user_id = get_current_user_id();
         $user    = get_userdata( $user_id );
+
+        $this->log('PMES: '. $user->user_email);
 
         if ( ! $user || empty( $this->pmes_url ) ) {
             return;
@@ -126,7 +129,7 @@ class VideoTracker {
             'timestamp'  => current_time( 'mysql' ),
         ];
 
-        $this->log('PMES:'. $body['user_email']);
+        
 
         $response = wp_remote_post( $this->pmes_url, [
             'method'  => 'POST',
