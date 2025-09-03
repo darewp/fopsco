@@ -62,6 +62,7 @@ class VideoTracker {
     public function handle_video_completed() {
         $this->verify_nonce();
         $this->increment_counter( 'completed' );
+        $this->trigger_n8n_workflow();
     }
 
     private function increment_counter( $type ) {
