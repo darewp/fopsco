@@ -23,17 +23,25 @@ class TrackVideo {
     }
 
     private function log($message) {
-        $log_file = WP_CONTENT_DIR . '/uploads/flog.txt';
+        $upload_dir = wp_upload_dir();
+        $log_file   = trailingslashit($upload_dir['basedir']) . 'flog.txt';
 
         if (is_array($message) || is_object($message)) {
             $message = print_r($message, true);
         }
 
-        file_put_contents(
-            $log_file,
-            '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
-            FILE_APPEND | LOCK_EX
-        );
+        // Make sure file is writable/creatable
+        if (!file_exists($log_file)) {
+            @file_put_contents($log_file, '');
+        }
+
+        if (is_writable($log_file) || is_writable(dirname($log_file))) {
+            file_put_contents(
+                $log_file,
+                '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
+                FILE_APPEND
+            );
+        }
     } 
 
     public function enqueue_scripts() {
