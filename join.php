@@ -1,9 +1,6 @@
 <?php
 /* Template Name: Join Fopsco */
 get_header();
-
-error_log("🔥 Test log from WordPress on WAMP");
-
 ?>
 
 <div class="max-w-7xl mx-auto px-4">

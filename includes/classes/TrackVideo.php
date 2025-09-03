@@ -23,22 +23,6 @@ class TrackVideo {
         error_log("PMES Log Fallback: ");
     }
 
-    private function log($message) {
-        $upload_dir = wp_get_upload_dir(); // ensures root /uploads
-        $log_file   = trailingslashit($upload_dir['basedir']) . 'flog.txt';
-
-        if (is_array($message) || is_object($message)) {
-            $message = print_r($message, true);
-        }
-
-        $entry = '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
-
-        if (@file_put_contents($log_file, $entry, FILE_APPEND | LOCK_EX) === false) {
-            error_log("PMES Log Fallback: " . $message);
-        }
-    }
-
-
     public function enqueue_scripts() {
         if ( is_user_logged_in() && is_page( 'pre-membership-education-seminar' ) ) {
             wp_enqueue_script(
@@ -83,8 +67,6 @@ class TrackVideo {
         $this->increment_counter( 'completed' );
     }
 
-
-
     private function increment_counter( $type ) {
         $user_id = get_current_user_id();
         if ( ! $user_id ) {
@@ -115,14 +97,13 @@ class TrackVideo {
             'data'    => $data,
         ] );
     }
-
     
     private function trigger_n8n_workflow() {
         
         $user_id = get_current_user_id();
         $user    = get_userdata( $user_id );
 
-        $this->log('PMES: '. $user->user_email);
+        error_log('PMES: '. $user->user_email);
 
         if ( ! $user || empty( $this->pmes_url ) ) {
             return;
@@ -151,7 +132,7 @@ class TrackVideo {
         ] );
 
         if ( is_wp_error( $response ) ) {
-            $this->log( 'PMES n8n webhook failed: ' . $response->get_error_message() );
+            error_log( 'PMES n8n webhook failed: ' . $response->get_error_message() );
         }
     }
 
