@@ -6,9 +6,9 @@ class VideoTracker {
     use Singleton;
 
     protected function __construct() {
-        
         add_action( 'wp_ajax_video_played',    [ $this, 'handle_video_played' ] );
         add_action( 'wp_ajax_video_paused',    [ $this, 'handle_video_paused' ] );
+        add_action( 'wp_ajax_video_skipped',   [ $this, 'handle_video_skipped' ] );
         add_action( 'wp_ajax_video_completed', [ $this, 'handle_video_completed' ] );
 
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -38,38 +38,52 @@ class VideoTracker {
 
     public function handle_video_played() {
         $this->verify_nonce();
-        $this->update_video_status( 'playing' );
+        $this->increment_counter( 'played' );
     }
 
     public function handle_video_paused() {
         $this->verify_nonce();
+        $this->increment_counter( 'paused' );
+    }
 
-        $time = intval( $_POST['currentTime'] ?? 0 );
-        $this->update_video_status( 'paused', $time );
+    public function handle_video_skipped() {
+        $this->verify_nonce();
+        $this->increment_counter( 'skipped' );
     }
 
     public function handle_video_completed() {
         $this->verify_nonce();
-        $this->update_video_status( 'completed' );
+        $this->increment_counter( 'completed' );
     }
 
-    private function update_video_status( $status, $time = null ) {
+    private function increment_counter( $type ) {
         $user_id = get_current_user_id();
-
         if ( ! $user_id ) {
             wp_send_json_error( [ 'message' => 'Invalid request' ] );
         }
 
-        $data = [
-            'status'  => $status,
-            'time'    => $time,
-            'updated' => current_time( 'mysql' ),
-        ];
+        $data = get_user_meta( $user_id, 'pmes_video_progress', true );
+
+        if ( ! is_array( $data ) ) {
+            $data = [
+                'played'    => 0,
+                'paused'    => 0,
+                'skipped'   => 0,
+                'completed' => 0,
+            ];
+        }
+
+        if ( isset( $data[ $type ] ) ) {
+            $data[ $type ]++;
+        }
+
+        $data['updated'] = current_time( 'mysql' );
 
         update_user_meta( $user_id, 'pmes_video_progress', $data );
 
         wp_send_json_success( [
-            'message' => "PMES video {$status} recorded",
+            'message' => "Video {$type} count updated",
+            'data'    => $data,
         ] );
     }
 
