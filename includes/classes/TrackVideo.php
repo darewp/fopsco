@@ -20,10 +20,11 @@ class TrackVideo {
         add_action( 'wp_ajax_video_completed', [ $this, 'handle_video_completed' ] );
 
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] ); 
+        error_log("PMES Log Fallback: ");
     }
 
     private function log($message) {
-        $upload_dir = wp_upload_dir();
+        $upload_dir = wp_get_upload_dir(); // ensures root /uploads
         $log_file   = trailingslashit($upload_dir['basedir']) . 'flog.txt';
 
         if (is_array($message) || is_object($message)) {
@@ -32,18 +33,11 @@ class TrackVideo {
 
         $entry = '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
 
-        // Try to write
-        $result = @file_put_contents($log_file, $entry, FILE_APPEND);
-
-        if ($result === false) {
-            // Fallback: log to PHP error log
-            error_log("TrackVideo log() failed. Tried: $log_file");
-            error_log("Message was: " . $entry);
-
-            // Optional: expose where uploads path points
-            error_log("Upload base dir: " . $upload_dir['basedir']);
+        if (@file_put_contents($log_file, $entry, FILE_APPEND | LOCK_EX) === false) {
+            error_log("PMES Log Fallback: " . $message);
         }
-    } 
+    }
+
 
     public function enqueue_scripts() {
         if ( is_user_logged_in() && is_page( 'pre-membership-education-seminar' ) ) {
@@ -70,26 +64,23 @@ class TrackVideo {
     public function handle_video_played() {
         $this->verify_nonce();
         $this->increment_counter( 'played' );
-        $this->log('PMES: played');
     }
 
     public function handle_video_paused() {
         $this->verify_nonce();
         $this->increment_counter( 'paused' );
-        $this->log('PMES: paused');
     }
 
     public function handle_video_skipped() {
-        $this->verify_nonce();
+        $this->verify_nonce();       
         $this->increment_counter( 'skipped' );
-        $this->log('PMES: skipped');
     }
 
     public function handle_video_completed() {
         $this->verify_nonce();
-        $this->increment_counter( 'completed' );
-        $this->log('PMES: completed');
+        error_log('PMES: completed');        
         $this->trigger_n8n_workflow();
+        $this->increment_counter( 'completed' );
     }
 
 
