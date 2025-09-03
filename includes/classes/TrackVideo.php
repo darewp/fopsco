@@ -20,7 +20,7 @@ class VideoTracker {
                 'video-tracker',
                 get_template_directory_uri() . '/assets/js/pmes-tracker.js',
                 [],
-                wp_get_theme()->get( 'Version' ),
+                filemtime( get_template_directory() . '/assets/js/pmes-tracker.js' ),
                 true
             );
 
