@@ -128,14 +128,17 @@ class TrackVideo {
             return;
         }
 
-        $body = [
-            'user_id'    => $user_id,
-            'user_email' => $user->user_email,
-            'status'     => 'completed',
-            'timestamp'  => current_time( 'mysql' ),
-        ];
+        $phone_number = get_user_meta( $user_id, 'phone_number', true );
 
-        
+        $body = [
+            'user_id'      => $user_id,
+            'user_email'   => $user->user_email,
+            'first_name'   => $user->first_name,
+            'last_name'    => $user->last_name,
+            'phone_number' => $phone_number ? $phone_number : '',
+            'status'       => 'completed',
+            'timestamp'    => current_time( 'mysql' ),
+        ];
 
         $response = wp_remote_post( $this->pmes_url, [
             'method'  => 'POST',
