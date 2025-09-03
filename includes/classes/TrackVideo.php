@@ -5,13 +5,21 @@ use Fopsco\Traits\Singleton;
 class VideoTracker {
     use Singleton;
 
+    private $pmes_url; 
+    private $pmes_username; 
+    private $pmes_password; 
+
     protected function __construct() {
+        $this->pmes_url      = defined( 'DAREWP_PMES_URL' )  ? DAREWP_PMES_URL  : ''; 
+        $this->pmes_username = defined( 'DAREWP_PMES_USER' ) ? DAREWP_PMES_USER : ''; 
+        $this->pmes_password = defined( 'DAREWP_PMES_PASS' ) ? DAREWP_PMES_PASS : ''; 
+
         add_action( 'wp_ajax_video_played',    [ $this, 'handle_video_played' ] );
         add_action( 'wp_ajax_video_paused',    [ $this, 'handle_video_paused' ] );
         add_action( 'wp_ajax_video_skipped',   [ $this, 'handle_video_skipped' ] );
         add_action( 'wp_ajax_video_completed', [ $this, 'handle_video_completed' ] );
 
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] ); 
     }
 
     public function enqueue_scripts() {
@@ -85,6 +93,37 @@ class VideoTracker {
             'message' => "Video {$type} count updated",
             'data'    => $data,
         ] );
+    }
+
+    
+    private function trigger_n8n_workflow() {
+        $user_id = get_current_user_id();
+        $user    = get_userdata( $user_id );
+
+        if ( ! $user || empty( $this->pmes_url ) ) {
+            return;
+        }
+
+        $body = [
+            'user_id'    => $user_id,
+            'user_email' => $user->user_email,
+            'status'     => 'completed',
+            'timestamp'  => current_time( 'mysql' ),
+        ];
+
+        $response = wp_remote_post( $this->pmes_url, [
+            'method'  => 'POST',
+            'headers' => [
+                'Authorization' => 'Basic ' . base64_encode( $this->pmes_username . ':' . $this->pmes_password ),
+                'Content-Type'  => 'application/json',
+            ],
+            'body'    => wp_json_encode( $body ),
+            'timeout' => 15,
+        ] );
+
+        if ( is_wp_error( $response ) ) {
+            error_log( 'PMES n8n webhook failed: ' . $response->get_error_message() );
+        }
     }
 
     private function verify_nonce() {
