@@ -112,6 +112,8 @@ class VideoTracker {
             'timestamp'  => current_time( 'mysql' ),
         ];
 
+        error_log( 'PMES webhook sending: ' . wp_json_encode( $body ) );
+        
         $response = wp_remote_post( $this->pmes_url, [
             'method'  => 'POST',
             'headers' => [
