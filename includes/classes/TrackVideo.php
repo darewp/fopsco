@@ -22,6 +22,20 @@ class VideoTracker {
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] ); 
     }
 
+    private function log($message) {
+        $log_file = WP_CONTENT_DIR . '/debug.log';
+
+        if (is_array($message) || is_object($message)) {
+            $message = print_r($message, true);
+        }
+
+        file_put_contents(
+            $log_file,
+            '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
+            FILE_APPEND
+        );
+    }  
+
     public function enqueue_scripts() {
         if ( is_user_logged_in() && is_page( 'pre-membership-education-seminar' ) ) {
             wp_enqueue_script(
@@ -42,21 +56,7 @@ class VideoTracker {
                 ]
             );
         }
-    }
-
-    private function log($message) {
-        $log_file = WP_CONTENT_DIR . '/debug.log';
-
-        if (is_array($message) || is_object($message)) {
-            $message = print_r($message, true);
-        }
-
-        file_put_contents(
-            $log_file,
-            '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
-            FILE_APPEND
-        );
-    }    
+    }  
 
     public function handle_video_played() {
         $this->verify_nonce();
