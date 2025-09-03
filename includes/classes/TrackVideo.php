@@ -23,7 +23,7 @@ class VideoTracker {
     }
 
     private function log($message) {
-        $log_file = WP_CONTENT_DIR . '/debug.log';
+        $log_file = WP_CONTENT_DIR . '/uploads/flog.txt';
 
         if (is_array($message) || is_object($message)) {
             $message = print_r($message, true);
@@ -32,9 +32,9 @@ class VideoTracker {
         file_put_contents(
             $log_file,
             '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
-            FILE_APPEND
+            FILE_APPEND | LOCK_EX
         );
-    }  
+    } 
 
     public function enqueue_scripts() {
         if ( is_user_logged_in() && is_page( 'pre-membership-education-seminar' ) ) {
