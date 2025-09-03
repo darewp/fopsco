@@ -47,21 +47,25 @@ class VideoTracker {
     public function handle_video_played() {
         $this->verify_nonce();
         $this->increment_counter( 'played' );
+        $this->log('PMES: played');
     }
 
     public function handle_video_paused() {
         $this->verify_nonce();
         $this->increment_counter( 'paused' );
+        $this->log('PMES: paused');
     }
 
     public function handle_video_skipped() {
         $this->verify_nonce();
         $this->increment_counter( 'skipped' );
+        $this->log('PMES: skipped');
     }
 
     public function handle_video_completed() {
         $this->verify_nonce();
         $this->increment_counter( 'completed' );
+        $this->log('PMES: completed');
         $this->trigger_n8n_workflow();
     }
 
