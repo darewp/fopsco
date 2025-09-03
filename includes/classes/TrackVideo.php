@@ -44,6 +44,20 @@ class VideoTracker {
         }
     }
 
+    private function log($message) {
+        $log_file = WP_CONTENT_DIR . '/debug.log';
+
+        if (is_array($message) || is_object($message)) {
+            $message = print_r($message, true);
+        }
+
+        file_put_contents(
+            $log_file,
+            '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
+            FILE_APPEND
+        );
+    }    
+
     public function handle_video_played() {
         $this->verify_nonce();
         $this->increment_counter( 'played' );
@@ -69,19 +83,7 @@ class VideoTracker {
         $this->trigger_n8n_workflow();
     }
 
-    private function log($message) {
-        $log_file = WP_CONTENT_DIR . '/debug.log';
 
-        if (is_array($message) || is_object($message)) {
-            $message = print_r($message, true);
-        }
-
-        file_put_contents(
-            $log_file,
-            '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
-            FILE_APPEND
-        );
-    }
 
     private function increment_counter( $type ) {
         $user_id = get_current_user_id();
