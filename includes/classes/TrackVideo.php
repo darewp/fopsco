@@ -126,7 +126,7 @@ class VideoTracker {
             'timestamp'  => current_time( 'mysql' ),
         ];
 
-        $this->log('PMES:', $body['user_email']);
+        $this->log('PMES:'. $body['user_email']);
 
         $response = wp_remote_post( $this->pmes_url, [
             'method'  => 'POST',
