@@ -33,7 +33,7 @@ class AssetLoader {
             true
         );
 
-        if( is_page('join') ){
+        if( is_page('create-account') ){
             wp_enqueue_script(
                 'fopsco-join',
                 get_template_directory_uri() . '/assets/js/join.js',
