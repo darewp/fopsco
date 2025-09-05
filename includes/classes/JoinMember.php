@@ -91,7 +91,7 @@ class JoinMember {
 
         return [
             'success' => true,
-            'message' => 'You have now joined FOPSCo!',
+            'message' => 'You successfully created an account in FOPSCo. Please wait for admin approval.',
             'user_id' => $user_id,
         ];
     }
