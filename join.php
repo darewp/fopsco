@@ -2,7 +2,7 @@
 /* Template Name: Create account */
 get_header();
 
-if( is_user_logged_in() ){
+if( !is_user_logged_in() ){
 ?>
 
 <div class="max-w-7xl mx-auto px-4">
