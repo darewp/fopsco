@@ -16,7 +16,7 @@ if( !is_user_logged_in() ){
                 <?php wp_nonce_field('lodge_join_form', 'lodge_join_nonce'); ?>
 
                 <!-- First + Last Name -->
-                <div class="flex space-x-4">
+                <div class="flex gap-4">
                     <div class="w-1/2">
                         <input type="text" id="first_name" placeholder="First Name"
                             class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
@@ -30,7 +30,7 @@ if( !is_user_logged_in() ){
                 </div>
 
                 <!-- Email + Phone -->
-                <div class="flex space-x-4">
+                <div class="flex gap-4">
                     <div class="w-1/2">
                         <input type="email" id="email" placeholder="Email Address"
                             class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
