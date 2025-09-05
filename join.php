@@ -1,12 +1,11 @@
 <?php
-/* Template Name: Join Fopsco */
+/* Template Name: Create account */
 get_header();
 ?>
 
 <div class="max-w-7xl mx-auto px-4">
     <div class="flex flex-wrap justify-center mt-4">
         <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-            <h2 class="text-2xl text-[#182955] font-bold text-center">Join</h2>
             <div class="flex justify-center">
                 <?php echo file_get_contents(get_template_directory() . '/assets/img/FOPSCo-2025-logo.svg'); ?>
             </div>
