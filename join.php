@@ -58,7 +58,7 @@ if( !is_user_logged_in() ){
             <div class="flex justify-center">
                 <?php echo file_get_contents(get_template_directory() . '/assets/img/FOPSCo-2025-logo.svg'); ?>
             </div>
-            <p class="text-center text-gray-600 mb-4">You are already have an account.</p>
+            <p class="text-center text-gray-600 mt-3 mb-4">You are already have an account.</p>
         </div>
     </div>
 </div>
