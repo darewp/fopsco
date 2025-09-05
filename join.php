@@ -59,9 +59,6 @@ if( !is_user_logged_in() ){
                 <?php echo file_get_contents(get_template_directory() . '/assets/img/FOPSCo-2025-logo.svg'); ?>
             </div>
             <p class="text-center text-gray-600 mb-4">You are already have an account.</p>
-            <div class="text-center">
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="inline-block bg-[#182955] text-white py-3 px-4 rounded-lg hover:bg-[#F85E00] transition">Go to Homepage</a>
-            </div>
         </div>
     </div>
 </div>
