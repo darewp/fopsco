@@ -12,47 +12,47 @@ if( !is_user_logged_in() ){
                 <?php echo file_get_contents(get_template_directory() . '/assets/img/FOPSCo-2025-logo.svg'); ?>
             </div>
             
-            <form id="joinForm" class="space-y-4">
+            <form id="joinForm" class="gap-4">
                 <?php wp_nonce_field('lodge_join_form', 'lodge_join_nonce'); ?>
-                <div class="flex gap-4">
-                    <div class="w-1/2">
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-2 mb-3">
+                    <div class="w-full sm:w-1/2">
                         <input type="text" id="first_name" placeholder="First Name"
                             class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
                             autocomplete="off" required>
                     </div>
-                    <div class="w-1/2">
+                    <div class="w-full sm:w-1/2">
                         <input type="text" id="last_name" placeholder="Last Name"
                             class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
                             autocomplete="off" required>
                     </div>
                 </div>
-                <div class="flex gap-4">
-                    <div class="w-1/2">
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-2 mb-3">
+                    <div class="w-full sm:w-1/2">
                         <input type="email" id="email" placeholder="Email Address"
                             class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
                             autocomplete="off" required>
                     </div>
-                    <div class="w-1/2">
+                    <div class="w-full sm:w-1/2">
                         <input type="text" id="phone_number" placeholder="Mobile Number"
                             class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
                             autocomplete="off" required>
                     </div>
                 </div>
-                <div>
+                <div class="mb-3">
                     <select id="member_type"
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
+                        class="w-full h-[42px] px-4 py-2 border border-[#000000] rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
                         required>
                         <option value="" disabled selected>Select Member Type</option>
                         <option value="regular">Online Professional</option>
                         <option value="associate">MSME</option>
                     </select>
                 </div>
-                <div>
+                <div class="mb-3">
                     <input type="password" id="password" placeholder="Password"
                         class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
                         autocomplete="off" required>
                 </div>
-                <div>
+                <div class="mb-3">
                     <input type="password" id="confirm" placeholder="Confirm Password"
                         class="w-full px-4 py-2 border rounded-lg focus:ring-1 focus:ring-[#F85E00] focus:border-[#F85E00] focus:outline-none"
                         autocomplete="off" required>
@@ -63,7 +63,7 @@ if( !is_user_logged_in() ){
 
                 <button type="submit"
                     class="w-full bg-[#182955] text-white py-3 px-4 rounded-lg hover:bg-[#F85E00] transition">
-                    Join Now
+                    Create an Account
                 </button>
             </form>
 
