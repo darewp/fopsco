@@ -1,5 +1,6 @@
 <?php
 /* Template Name: PROFILE */
+wp_head();
 ?>
 <?php
 if ( ! is_user_logged_in() ) {
@@ -237,4 +238,6 @@ function field_attr( $user_id, $meta_key ) {
         </div>
     </div>
 </div>
-
+<?php
+wp_footer();
+?>
