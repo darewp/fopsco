@@ -31,9 +31,9 @@ foreach ( $required_fields as $field ) {
                   //     exit;
                   ?>
                   <div class="w-full h-full bg-gray-100 flex flex-col justify-center items-center rounded-2xl p-4 text-center">
-                        <h class="text-2xl font-bold mb-4">Complete Your Profile</h2>
+                        <h3 class="text-2xl font-bold mb-4">Complete Your Profile</h3>
                         <p class="mb-4">Please complete your profile to access the Pre-membership Education Seminar Video.</p>
-                        <a href="<?php echo esc_url( site_url( '/profile' ) ); ?>" class="text-[#F85E00] px-6 py-3 rounded-lg hover:bg-[#e65500] transition">Go to Profile</a>
+                        <a href="<?php echo esc_url( site_url( '/profile' ) ); ?>" class="text-[#F85E00] px-6 py-3">Go to Profile</a>
                   <?php
             }else{
             ?>
