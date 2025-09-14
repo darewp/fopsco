@@ -6,10 +6,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! is_user_logged_in() ) {
-      // REDIRECT
       wp_redirect( wp_login_url( get_permalink() ) );
       exit;
+      }
+
+$user_id = get_current_user_id();
+$required_fields = [ 'current_address', 'province', 'municipality', 'barangay', 'government_id' ];
+$missing = false;
+
+foreach ( $required_fields as $field ) {
+      $value = get_user_meta( $user_id, $field, true );
+      if ( empty( $value ) ) {
+            $missing = true;
+            break;
+      }
 }
+
+if ( $missing && ! is_page( 'profile' ) ) {
+    wp_redirect( site_url( '/profile' ) );
+    exit;
+}
+
 wp_head();
 ?>
 <div class="max-w-7xl mx-auto px-4 flex justify-center items-center">
