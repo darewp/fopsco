@@ -175,58 +175,6 @@ function field_attr( $user_id, $meta_key ) {
                         class="w-full border rounded-lg px-3 py-2"
                         <?php echo field_attr( $user_id, 'portfolio_url' ); ?>>
                 </div>
-
-                <!-- Affiliation -->
-                <div>
-                    <label for="affiliation" class="block text-sm font-medium text-gray-700 mb-1">Affiliation</label>
-                    <select name="affiliation" id="affiliation" class="w-full border rounded-lg px-3 py-2"
-                        <?php echo ! empty( get_user_meta( $user_id, 'affiliation', true ) ) ? 'disabled' : ''; ?>>
-                        <option value="">Select</option>
-                        <option value="DICT Trainer" <?php selected(get_user_meta($user_id, 'affiliation', true), 'DICT Trainer'); ?>>DICT Trainer</option>
-                        <option value="DICT Trainee" <?php selected(get_user_meta($user_id, 'affiliation', true), 'DICT Trainee'); ?>>DICT Trainee</option>
-                        <option value="NGO" <?php selected(get_user_meta($user_id, 'affiliation', true), 'NGO'); ?>>NGO</option>
-                        <option value="Private Sector" <?php selected(get_user_meta($user_id, 'affiliation', true), 'Private Sector'); ?>>Private Sector</option>
-                        <option value="Other" <?php selected(get_user_meta($user_id, 'affiliation', true), 'Other'); ?>>Other</option>
-                    </select>
-                </div>
-
-                <!-- Freelancing Status -->
-                <div>
-                    <label for="freelancing_status" class="block text-sm font-medium text-gray-700 mb-1">Freelancing Status</label>
-                    <select name="freelancing_status" id="freelancing_status" class="w-full border rounded-lg px-3 py-2"
-                        <?php echo ! empty( get_user_meta( $user_id, 'freelancing_status', true ) ) ? 'disabled' : ''; ?>>
-                        <option value="">Select</option>
-                        <option value="Aspiring Freelancer" <?php selected(get_user_meta($user_id, 'freelancing_status', true), 'Aspiring Freelancer'); ?>>Aspiring Freelancer</option>
-                        <option value="New Freelancer with One Client" <?php selected(get_user_meta($user_id, 'freelancing_status', true), 'New Freelancer with One Client'); ?>>New Freelancer with One Client</option>
-                        <option value="New Freelancer with Multiple Clients" <?php selected(get_user_meta($user_id, 'freelancing_status', true), 'New Freelancer with Multiple Clients'); ?>>New Freelancer with Multiple Clients</option>
-                        <option value="Old Freelancer with Multiple Clients" <?php selected(get_user_meta($user_id, 'freelancing_status', true), 'Old Freelancer with Multiple Clients'); ?>>Old Freelancer with Multiple Clients</option>
-                        <option value="Freelancer with Team" <?php selected(get_user_meta($user_id, 'freelancing_status', true), 'Freelancer with Team'); ?>>Freelancer with Team</option>
-                        <option value="Freelancer with Agency" <?php selected(get_user_meta($user_id, 'freelancing_status', true), 'Freelancer with Agency'); ?>>Freelancer with Agency</option>
-                        <option value="Not a Freelancer" <?php selected(get_user_meta($user_id, 'freelancing_status', true), 'Not a Freelancer'); ?>>Not a Freelancer</option>
-                    </select>
-                </div>
-
-                <!-- Freelancing Skills -->
-                <div>
-                    <label for="freelancing_skills" class="block text-sm font-medium text-gray-700 mb-1">Freelancing Skills</label>
-                    <textarea name="freelancing_skills" id="freelancing_skills" rows="4" class="w-full border rounded-lg px-3 py-2"
-                        <?php echo ! empty( get_user_meta( $user_id, 'freelancing_skills', true ) ) ? 'placeholder="' . esc_attr(get_user_meta($user_id, 'freelancing_skills', true)) . '" disabled' : ''; ?>></textarea>
-                </div>
-
-                <!-- Monthly Earnings -->
-                <div>
-                    <label for="monthly_earnings" class="block text-sm font-medium text-gray-700 mb-1">Estimated Monthly Freelancing Earnings</label>
-                    <select name="monthly_earnings" id="monthly_earnings" class="w-full border rounded-lg px-3 py-2"
-                        <?php echo ! empty( get_user_meta( $user_id, 'monthly_earnings', true ) ) ? 'disabled' : ''; ?>>
-                        <option value="">Select</option>
-                        <option value="Below 100" <?php selected(get_user_meta($user_id, 'monthly_earnings', true), 'Below 100'); ?>>Below $100</option>
-                        <option value="100-500" <?php selected(get_user_meta($user_id, 'monthly_earnings', true), '100-500'); ?>>$100 - $500</option>
-                        <option value="600-1000" <?php selected(get_user_meta($user_id, 'monthly_earnings', true), '600-1000'); ?>>$600 - $1,000</option>
-                        <option value="1000-2000" <?php selected(get_user_meta($user_id, 'monthly_earnings', true), '1000-2000'); ?>>$1,000 - $2,000</option>
-                        <option value="2000-above" <?php selected(get_user_meta($user_id, 'monthly_earnings', true), '2000-above'); ?>>$2,000 and above</option>
-                    </select>
-                </div>
-
                 <!-- Submit -->
                 <div class="text-center">
                     <button type="submit" name="save_profile" class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition">
