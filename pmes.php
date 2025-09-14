@@ -4,11 +4,11 @@
 if ( ! defined( 'ABSPATH' ) ) {
       exit;
 }
-
+wp_head();
 if ( ! is_user_logged_in() ) {
       wp_redirect( wp_login_url( get_permalink() ) );
       exit;
-      }
+}
 
 $user_id = get_current_user_id();
 $required_fields = [ 'current_address', 'province', 'municipality', 'barangay', 'government_id' ];
@@ -21,16 +21,22 @@ foreach ( $required_fields as $field ) {
             break;
       }
 }
-
-if ( $missing && ! is_page( 'profile' ) ) {
-    wp_redirect( site_url( '/profile' ) );
-    exit;
-}
-
-wp_head();
 ?>
 <div class="max-w-7xl mx-auto px-4 flex justify-center items-center">
       <div class="min-h-screen flex flex-wrap justify-center align-center mt-4 max-w-5xl w-full">
+            
+            <?php
+            if ( $missing && ! is_page( 'profile' ) ) {
+                  //     wp_redirect( site_url( '/profile' ) );
+                  //     exit;
+                  ?>
+                  <div class="w-full h-full bg-gray-100 flex flex-col justify-center items-center rounded-2xl p-4 text-center">
+                        <h3 class="text-2xl font-bold mb-4">Complete Your Profile</h2>
+                        <p class="mb-4">Please complete your profile to access the Pre-membership Education Seminar Video.</p>
+                        <a href="<?php echo esc_url( site_url( '/profile' ) ); ?>" class="bg-[#F85E00] text-white px-6 py-3 rounded-lg hover:bg-[#e65500] transition">Go to Profile</a>
+                  <?php
+            }else{
+            ?>
             <div class="relative w-full pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-lg">
                   <video 
                   id="lessonVideo" 
@@ -41,6 +47,9 @@ wp_head();
                   Your browser does not support the video tag.
                   </video>
             </div>
+            <?php
+            }
+            ?>
       </div>
 </div>
 <?php
