@@ -25,6 +25,8 @@ class TrackVideo {
         add_action('show_user_profile', [$this, 'display_video_progress']);
         add_action('edit_user_profile', [$this, 'display_video_progress']);
 
+        add_action('personal_options_update', [$this, 'handle_reset_progress']);
+        add_action('edit_user_profile_update', [$this, 'handle_reset_progress']);
 
         error_log("PMES Log Fallback initialized");
     }
@@ -195,8 +197,36 @@ class TrackVideo {
                 <th>Status</th>
                 <td><?php echo !empty($progress['completed']) ? 'Completed ✅' : 'Not Completed ❌'; ?></td>
             </tr>
+            <tr>
+            <th>Reset Progress</th>
+            <td>
+                <form method="post" action="">
+                    <?php wp_nonce_field('reset_pmes_video_progress', 'reset_pmes_nonce'); ?>
+                    <input type="hidden" name="reset_user_id" value="<?php echo esc_attr($user_id); ?>">
+                    <input type="submit" class="button button-secondary" value="Reset Progress">
+                </form>
+            </td>
+        </tr>
         </table>
         <?php
     }
+
+    public function handle_reset_progress(): void {
+        if (
+            empty($_POST['reset_pmes_nonce']) ||
+            !wp_verify_nonce($_POST['reset_pmes_nonce'], 'reset_pmes_video_progress') ||
+            empty($_POST['reset_user_id'])
+        ) {
+            return;
+        }
+
+        $user_id = intval($_POST['reset_user_id']);
+        delete_user_meta($user_id, 'pmes_video_progress');
+
+        add_action('admin_notices', function() {
+            echo '<div class="notice notice-success is-dismissible"><p>Video progress has been reset.</p></div>';
+        });
+    }
+
   
 }
