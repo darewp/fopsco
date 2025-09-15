@@ -8,9 +8,9 @@ if (!is_user_logged_in()) {
 $user_id = get_current_user_id();
 $user    = get_userdata($user_id);
 
-$n8n_url      = defined('DAREWP_N8N_URL')  ? DAREWP_N8N_ID_URL  : '';
-$n8n_username = defined('DAREWP_N8N_USER') ? DAREWP_N8N_ID_USER : '';
-$n8n_password = defined('DAREWP_N8N_PASS') ? DAREWP_N8N_ID_PASS : '';
+$n8n_url      = defined('DAREWP_N8N_ID_URL')  ? DAREWP_N8N_ID_URL  : '';
+$n8n_username = defined('DAREWP_N8N_ID_USER') ? DAREWP_N8N_ID_USER : '';
+$n8n_password = defined('DAREWP_N8N_ID_PASS') ? DAREWP_N8N_ID_PASS : '';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'])) {
