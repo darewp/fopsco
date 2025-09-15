@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let accumulatedTime = 0;
 
     const sendVideoEvent = (action, extraData = {}) => {
+        console.log(`[VideoTracker] Sending event: ${action}`, extraData);
+
         const formData = new FormData();
         formData.append("action", action);
         formData.append("_ajax_nonce", VideoTracker.nonce);
@@ -23,19 +25,23 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(response => {
             if (!response.success) {
-                console.error("Video Tracker Error:", response.data.message);
+                console.error("[VideoTracker] Error:", response.data.message);
+            } else {
+                console.log("[VideoTracker] Success:", response.data.message);
             }
         })
-        .catch(err => console.error("AJAX Request Failed:", err));
+        .catch(err => console.error("[VideoTracker] AJAX Request Failed:", err));
     };
 
     video.addEventListener("play", () => {
         lastTime = video.currentTime;
+        console.log("[VideoTracker] Play at", lastTime, "seconds");
         sendVideoEvent("video_played");
     });
 
     video.addEventListener("pause", () => {
         accumulatedTime += Math.floor(video.currentTime - lastTime);
+        console.log("[VideoTracker] Pause at", video.currentTime, "seconds, accumulated:", accumulatedTime);
         sendVideoEvent("video_paused", {
             watched_seconds: accumulatedTime,
             video_duration: Math.floor(video.duration)
@@ -45,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     video.addEventListener("ended", () => {
         accumulatedTime += Math.floor(video.currentTime - lastTime);
+        console.log("[VideoTracker] Video ended, total watched:", accumulatedTime, "seconds");
         sendVideoEvent("video_completed", {
             watched_seconds: accumulatedTime,
             video_duration: Math.floor(video.duration)
@@ -58,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const to = video.currentTime;
         if (Math.abs(to - from) > 1) {
             accumulatedTime += Math.floor(Math.min(from, to) - lastTime);
+            console.log("[VideoTracker] Skipped from", from, "to", to, "accumulated:", accumulatedTime);
             sendVideoEvent("video_skipped", {
                 fromTime: Math.floor(from),
                 toTime: Math.floor(to),
