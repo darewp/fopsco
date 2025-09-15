@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
             !empty($province) &&
             !empty($municipality) &&
             !empty($barangay) &&
-            !empty($valid_id) && // ✅ fixed
-            (empty(is_array($progress) ? $progress['completed'] : $progress)) // ✅ safe check
+            !empty($valid_id) &&
+            (empty(is_array($progress) ? $progress['completed'] : $progress))
         ) {
             
             wp_remote_post($n8n_url, [
@@ -77,6 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
                 ]),
                 'data_format' => 'body',
             ]);
+
+            if (is_wp_error($response)) {
+                error_log('n8n webhook error: ' . $response->get_error_message());
+            } else {
+                error_log('n8n webhook response code: ' . wp_remote_retrieve_response_code($response));
+                error_log('n8n webhook response body: ' . wp_remote_retrieve_body($response));
+            }
         }
 
         $message = "Profile updated successfully.";
