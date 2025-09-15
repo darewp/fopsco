@@ -82,8 +82,13 @@ class JoinMember {
             'meta_input' => [
                 'phone_number' => $contact,
                 'member_type'  => $member_type,
+                'membership_date' => $user_id . date("m") . date("y"),
             ],
         ]);
+
+        if (!is_wp_error($user_id)) {
+            update_user_meta($user_id, 'membership_date', $user_id . date("m") . date("y"));
+        }
 
         if (is_wp_error($user_id)) {
             return $user_id;
