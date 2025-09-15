@@ -156,14 +156,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
                 &nbsp;
                 <h3 class="text-2xl font-bold mb-6">Valid ID</h3>
                 <!-- Government ID -->
-                <div>
-                    <label class="block text-sm font-medium">Government ID</label>
-                    <input type="file" name="government_id" class="mt-1 block w-full border rounded p-2">
-                    <?php if ($gov_id = get_user_meta($user_id, 'government_id', true)) : ?>
-                        <p class="mt-2 text-sm">Current: 
-                            <a href="<?php echo esc_url(wp_get_attachment_url($gov_id)); ?>" target="_blank" class="text-blue-600 underline">View File</a>
-                        </p>
-                    <?php endif; ?>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div>
+                        <label class="block text-sm font-medium">Government ID</label>
+                        <input type="file" name="government_id" class="mt-1 block w-full border rounded p-2">
+                        <?php if ($gov_id = get_user_meta($user_id, 'government_id', true)) : ?>
+                            <p class="mt-2 text-sm">Current: 
+                                <a href="<?php echo esc_url(wp_get_attachment_url($gov_id)); ?>" target="_blank" class="text-blue-600 underline">View File</a>
+                            </p>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <script>
