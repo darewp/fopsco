@@ -8,6 +8,10 @@ if (!is_user_logged_in()) {
 $user_id = get_current_user_id();
 $user    = get_userdata($user_id);
 
+$n8n_url      = defined('DAREWP_N8N_URL')  ? DAREWP_N8N_ID_URL  : '';
+$n8n_username = defined('DAREWP_N8N_USER') ? DAREWP_N8N_ID_USER : '';
+$n8n_password = defined('DAREWP_N8N_PASS') ? DAREWP_N8N_ID_PASS : '';
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'])) {
     if (wp_verify_nonce($_POST['fopsco_profile_nonce'], 'fopsco_update_profile')) {
@@ -53,10 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
             !empty($valid_id) && // ✅ fixed
             (empty(is_array($progress) ? $progress['completed'] : $progress)) // ✅ safe check
         ) {
-            $webhook_url = 'https://your-n8n-instance.com/webhook/profile-update';
-            wp_remote_post($webhook_url, [
+            
+            wp_remote_post($n8n_url, [
                 'method'  => 'POST',
-                'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
+                'headers' => [
+                    'Content-Type'  => 'application/json; charset=utf-8',
+                    'Authorization' => 'Basic ' . base64_encode($n8n_username . ':' . $n8n_password),
+                ],
                 'body'    => wp_json_encode([
                     'user_id'         => $user_id,
                     'email'           => $user->user_email,
