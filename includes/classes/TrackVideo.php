@@ -10,16 +10,16 @@ class TrackVideo {
     private $pmes_password; 
 
     protected function __construct() {
-        $this->pmes_url      = defined( 'DAREWP_PMES_URL' )  ? DAREWP_PMES_URL  : ''; 
-        $this->pmes_username = defined( 'DAREWP_PMES_USER' ) ? DAREWP_PMES_USER : ''; 
-        $this->pmes_password = defined( 'DAREWP_PMES_PASS' ) ? DAREWP_PMES_PASS : ''; 
+        $this->pmes_url      = defined('DAREWP_PMES_URL')  ? DAREWP_PMES_URL  : ''; 
+        $this->pmes_username = defined('DAREWP_PMES_USER') ? DAREWP_PMES_USER : ''; 
+        $this->pmes_password = defined('DAREWP_PMES_PASS') ? DAREWP_PMES_PASS : ''; 
 
-        add_action( 'wp_ajax_video_played',    [ $this, 'handle_video_played' ] );
-        add_action( 'wp_ajax_video_paused',    [ $this, 'handle_video_paused' ] );
-        add_action( 'wp_ajax_video_skipped',   [ $this, 'handle_video_skipped' ] );
-        add_action( 'wp_ajax_video_completed', [ $this, 'handle_video_completed' ] );
+        add_action('wp_ajax_video_played', [$this, 'handle_video_played']);
+        add_action('wp_ajax_video_paused', [$this, 'handle_video_paused']);
+        add_action('wp_ajax_video_skipped', [$this, 'handle_video_skipped']);
+        add_action('wp_ajax_video_completed', [$this, 'handle_video_completed']);
 
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] ); 
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']); 
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
 
         add_action('show_user_profile', [$this, 'display_video_progress']);
@@ -29,12 +29,12 @@ class TrackVideo {
     }
 
     public function enqueue_scripts() {
-        if ( is_user_logged_in() && is_page( 'pre-membership-education-seminar' ) ) {
+        if (is_user_logged_in() && is_page('pre-membership-education-seminar')) {
             wp_enqueue_script(
                 'video-tracker',
                 get_template_directory_uri() . '/assets/js/pmes-tracker.js',
                 [],
-                filemtime( get_template_directory() . '/assets/js/pmes-tracker.js' ),
+                filemtime(get_template_directory() . '/assets/js/pmes-tracker.js'),
                 true
             );
 
@@ -42,8 +42,8 @@ class TrackVideo {
                 'video-tracker',
                 'VideoTracker',
                 [
-                    'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                    'nonce'   => wp_create_nonce( 'video_tracker_nonce' ),
+                    'ajaxurl' => admin_url('admin-ajax.php'),
+                    'nonce'   => wp_create_nonce('video_tracker_nonce'),
                     'user_id' => get_current_user_id(),
                 ]
             );
@@ -69,21 +69,30 @@ class TrackVideo {
         );
     }
 
-    public function handle_video_played() { $this->verify_nonce(); $this->increment_counter('played'); }
-    public function handle_video_paused() { $this->verify_nonce(); $this->increment_counter('paused'); }
-    public function handle_video_skipped() { $this->verify_nonce(); $this->increment_counter('skipped'); }
+    public function handle_video_played() { $this->handle_event('played'); }
+    public function handle_video_paused() { $this->handle_event('paused'); }
+    public function handle_video_skipped() { $this->handle_event('skipped'); }
 
     public function handle_video_completed() {
         $this->verify_nonce();
         $user_id = get_current_user_id();
         $progress = get_user_meta($user_id, 'pmes_video_progress', true);
+
         if (empty($progress['completed']) || intval($progress['completed']) === 0) {
             $this->trigger_n8n_workflow();
         }
+
         $watched_seconds = isset($_POST['watched_seconds']) ? intval($_POST['watched_seconds']) : 0;
         $video_duration  = isset($_POST['video_duration']) ? intval($_POST['video_duration']) : 0;
 
         $this->increment_counter('completed', $watched_seconds, $video_duration);
+    }
+
+    private function handle_event($type) {
+        $this->verify_nonce();
+        $watched_seconds = isset($_POST['watched_seconds']) ? intval($_POST['watched_seconds']) : 0;
+        $video_duration  = isset($_POST['video_duration']) ? intval($_POST['video_duration']) : 0;
+        $this->increment_counter($type, $watched_seconds, $video_duration);
     }
 
     private function increment_counter($type, $watched_seconds = 0, $video_duration = 0) {
@@ -112,18 +121,21 @@ class TrackVideo {
 
         $phone_number = get_user_meta($user_id, 'phone_number', true);
         $body = [
-            'user_id'=>$user_id,
-            'user_email'=>$user->user_email,
-            'first_name'=>$user->first_name,
-            'last_name'=>$user->last_name,
-            'phone_number'=>$phone_number ?: '',
-            'status'=>'completed',
-            'timestamp'=>current_time('mysql')
+            'user_id'     => $user_id,
+            'user_email'  => $user->user_email,
+            'first_name'  => $user->first_name,
+            'last_name'   => $user->last_name,
+            'phone_number'=> $phone_number ?: '',
+            'status'      => 'completed',
+            'timestamp'   => current_time('mysql')
         ];
 
         $response = wp_remote_post($this->pmes_url, [
             'method'=>'POST',
-            'headers'=>['Authorization'=>'Basic '.base64_encode($this->pmes_username.':'.$this->pmes_password),'Content-Type'=>'application/json'],
+            'headers'=>[
+                'Authorization'=>'Basic '.base64_encode($this->pmes_username.':'.$this->pmes_password),
+                'Content-Type'=>'application/json'
+            ],
             'body'=>wp_json_encode($body),
             'timeout'=>15
         ]);
