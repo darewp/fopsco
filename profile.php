@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
 <?php get_header(); ?>
 <div class="max-w-7xl mx-auto px-4">
     <div class="flex flex-wrap justify-center">
-        <div class="w-full md:max-w-lg mx-auto py-10">
+        <div class="py-10">
             <h1 class="text-2xl font-bold mb-6">My Profile</h1>
 
             <?php if (!empty($message)) : ?>
@@ -58,34 +58,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
             <form method="post" enctype="multipart/form-data" class="space-y-6">
                 <?php wp_nonce_field('fopsco_update_profile', 'fopsco_profile_nonce'); ?>
 
-                <!-- First Name -->
-                <div>
-                    <label class="block text-sm font-medium">First Name</label>
-                    <input type="text" class="mt-1 block w-full border rounded p-2"
-                        value="<?php echo esc_attr($user->first_name); ?>" disabled>
-                </div>
+                <div class="flex md:flex-col">
+                    <!-- First Name -->
+                    <div class="w-1/4 md:w-full md:mb-4">
+                        <label class="block text-sm font-medium">First Name</label>
+                        <input type="text" class="mt-1 block w-full border rounded p-2"
+                            value="<?php echo esc_attr($user->first_name); ?>" disabled>
+                    </div>
 
-                <!-- Last Name -->
-                <div>
-                    <label class="block text-sm font-medium">Last Name</label>
-                    <input type="text" class="mt-1 block w-full border rounded p-2"
-                        value="<?php echo esc_attr($user->last_name); ?>" disabled>
-                </div>
+                    <!-- Last Name -->
+                    <div class="w-1/4 md:w-full md:mb-4">
+                        <label class="block text-sm font-medium">Last Name</label>
+                        <input type="text" class="mt-1 block w-full border rounded p-2"
+                            value="<?php echo esc_attr($user->last_name); ?>" disabled>
+                    </div>
+                
 
-                <!-- Phone -->
-                <div>
-                    <label class="block text-sm font-medium">Mobile Number</label>
-                    <input type="tel" name="phone_number"
-                        value="<?php echo esc_attr(get_user_meta($user_id, 'phone_number', true)); ?>"
-                        class="mt-1 block w-full border rounded p-2" placeholder="09123456789">
-                </div>
+                    <!-- Phone -->
+                    <div class="w-1/4 md:w-full md:mb-4">
+                        <label class="block text-sm font-medium">Mobile Number</label>
+                        <input type="tel" name="phone_number"
+                            value="<?php echo esc_attr(get_user_meta($user_id, 'phone_number', true)); ?>"
+                            class="mt-1 block w-full border rounded p-2" placeholder="09123456789">
+                    </div>
 
-                <!-- Birthdate -->
-                <div>
-                    <label class="block text-sm font-medium">Birthdate</label>
-                    <input type="date" name="birthdate"
-                        value="<?php echo esc_attr(get_user_meta($user_id, 'birthdate', true)); ?>"
-                        class="mt-1 block w-full border rounded p-2">
+                    <!-- Birthdate -->
+                    <div class="w-1/4 md:w-full md:mb-4">
+                        <label class="block text-sm font-medium">Birthdate</label>
+                        <input type="date" name="birthdate"
+                            value="<?php echo esc_attr(get_user_meta($user_id, 'birthdate', true)); ?>"
+                            class="mt-1 block w-full border rounded p-2">
+                    </div>
                 </div>
 
                 <!-- Gender -->
