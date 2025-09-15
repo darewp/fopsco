@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
 <?php get_header(); ?>
 <div class="max-w-7xl mx-auto px-4">
     <div class="flex flex-wrap justify-center mt-4">
-        <div class="max-w-3xl mx-auto py-10">
+        <div class="max-w-lg mx-auto py-10">
             <h1 class="text-2xl font-bold mb-6">My Profile</h1>
 
             <?php if (!empty($message)) : ?>
