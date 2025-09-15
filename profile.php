@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
 <div class="max-w-7xl mx-auto px-4">
     <div class="flex flex-wrap justify-center">
         <div class="w-full md:max-w-6xl py-10">
-            <h1 class="text-2xl font-bold mb-6">My Profile</h1>
+            <h3 class="text-2xl font-bold mb-6">Personal Information</h3>
 
             <?php if (!empty($message)) : ?>
                 <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
@@ -113,41 +113,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
                         </select>
                     </div>
                 </div>
-                <!-- Current Address -->
-                <div>
-                    <label class="block text-sm font-medium">Current Address</label>
-                    <input type="text" name="current_address"
-                        value="<?php echo esc_attr(get_user_meta($user_id, 'current_address', true)); ?>"
-                        class="mt-1 block w-full border rounded p-2">
-                </div>
-                <?php
-                $province     = get_user_meta($user_id, 'province', true);
-                $municipality = get_user_meta($user_id, 'municipality', true);
-                $barangay     = get_user_meta($user_id, 'barangay', true);
-                ?>
 
-                <!-- Province -->
-                <div>
-                    <label class="block text-sm font-medium">Province</label>
-                    <select id="province" name="province" class="mt-1 block w-full border rounded p-2">
-                        <option value="">Loading provinces...</option>
-                    </select>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <!-- Current Address -->
+                    <div>
+                        <label class="block text-sm font-medium">Current Address</label>
+                        <input type="text" name="current_address"
+                            value="<?php echo esc_attr(get_user_meta($user_id, 'current_address', true)); ?>"
+                            class="mt-1 block w-full border rounded p-2">
+                    </div>
+                    <?php
+                    $province     = get_user_meta($user_id, 'province', true);
+                    $municipality = get_user_meta($user_id, 'municipality', true);
+                    $barangay     = get_user_meta($user_id, 'barangay', true);
+                    ?>
+
+                    <!-- Province -->
+                    <div>
+                        <label class="block text-sm font-medium">Province</label>
+                        <select id="province" name="province" class="mt-1 block w-full border rounded p-2">
+                            <option value="">Loading provinces...</option>
+                        </select>
+                    </div>
+
+                    <!-- Municipality -->
+                    <div>
+                        <label class="block text-sm font-medium">Municipality/City</label>
+                        <select id="municipality" name="municipality" class="mt-1 block w-full border rounded p-2">
+                            <option value="">Select Municipality/City</option>
+                        </select>
+                    </div>
+
+                    <!-- Barangay -->
+                    <div>
+                        <label class="block text-sm font-medium">Barangay</label>
+                        <select id="barangay" name="barangay" class="mt-1 block w-full border rounded p-2">
+                            <option value="">Select Barangay</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Municipality -->
+                &nbsp;
+                <h3 class="text-2xl font-bold mb-6">Valid ID</h3>
+                <!-- Government ID -->
                 <div>
-                    <label class="block text-sm font-medium">Municipality/City</label>
-                    <select id="municipality" name="municipality" class="mt-1 block w-full border rounded p-2">
-                        <option value="">Select Municipality/City</option>
-                    </select>
-                </div>
-
-                <!-- Barangay -->
-                <div>
-                    <label class="block text-sm font-medium">Barangay</label>
-                    <select id="barangay" name="barangay" class="mt-1 block w-full border rounded p-2">
-                        <option value="">Select Barangay</option>
-                    </select>
+                    <label class="block text-sm font-medium">Government ID</label>
+                    <input type="file" name="government_id" class="mt-1 block w-full border rounded p-2">
+                    <?php if ($gov_id = get_user_meta($user_id, 'government_id', true)) : ?>
+                        <p class="mt-2 text-sm">Current: 
+                            <a href="<?php echo esc_url(wp_get_attachment_url($gov_id)); ?>" target="_blank" class="text-blue-600 underline">View File</a>
+                        </p>
+                    <?php endif; ?>
                 </div>
 
                 <script>
@@ -160,40 +176,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
                     };
                 </script>
 
+
+                &nbsp;
+                <h3 class="text-2xl font-bold mb-6">Social Media</h3>
                 <!-- Facebook -->
-                <div>
-                    <label class="block text-sm font-medium">Facebook URL</label>
-                    <input type="url" name="facebook_url"
-                        value="<?php echo esc_attr(get_user_meta($user_id, 'facebook_url', true)); ?>"
-                        class="mt-1 block w-full border rounded p-2" placeholder="https://facebook.com/...">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div>
+                        <label class="block text-sm font-medium">Facebook URL</label>
+                        <input type="url" name="facebook_url"
+                            value="<?php echo esc_attr(get_user_meta($user_id, 'facebook_url', true)); ?>"
+                            class="mt-1 block w-full border rounded p-2" placeholder="https://facebook.com/...">
+                    </div>
+
+                    <!-- LinkedIn -->
+                    <div>
+                        <label class="block text-sm font-medium">LinkedIn URL</label>
+                        <input type="url" name="linkedin_url"
+                            value="<?php echo esc_attr(get_user_meta($user_id, 'linkedin_url', true)); ?>"
+                            class="mt-1 block w-full border rounded p-2" placeholder="https://linkedin.com/in/...">
+                    </div>
+
+                    <!-- Portfolio -->
+                    <div>
+                        <label class="block text-sm font-medium">Portfolio URL</label>
+                        <input type="url" name="portfolio_url"
+                            value="<?php echo esc_attr(get_user_meta($user_id, 'portfolio_url', true)); ?>"
+                            class="mt-1 block w-full border rounded p-2" placeholder="https://example.com">
+                    </div>
                 </div>
 
-                <!-- LinkedIn -->
-                <div>
-                    <label class="block text-sm font-medium">LinkedIn URL</label>
-                    <input type="url" name="linkedin_url"
-                        value="<?php echo esc_attr(get_user_meta($user_id, 'linkedin_url', true)); ?>"
-                        class="mt-1 block w-full border rounded p-2" placeholder="https://linkedin.com/in/...">
-                </div>
-
-                <!-- Portfolio -->
-                <div>
-                    <label class="block text-sm font-medium">Portfolio URL</label>
-                    <input type="url" name="portfolio_url"
-                        value="<?php echo esc_attr(get_user_meta($user_id, 'portfolio_url', true)); ?>"
-                        class="mt-1 block w-full border rounded p-2" placeholder="https://example.com">
-                </div>
-
-                <!-- Government ID -->
-                <div>
-                    <label class="block text-sm font-medium">Government ID</label>
-                    <input type="file" name="government_id" class="mt-1 block w-full border rounded p-2">
-                    <?php if ($gov_id = get_user_meta($user_id, 'government_id', true)) : ?>
-                        <p class="mt-2 text-sm">Current: 
-                            <a href="<?php echo esc_url(wp_get_attachment_url($gov_id)); ?>" target="_blank" class="text-blue-600 underline">View File</a>
-                        </p>
-                    <?php endif; ?>
-                </div>
 
                 <div>
                     <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Update Profile</button>
