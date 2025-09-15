@@ -25,8 +25,7 @@ class TrackVideo {
         add_action('show_user_profile', [$this, 'display_video_progress']);
         add_action('edit_user_profile', [$this, 'display_video_progress']);
 
-        add_action('personal_options_update', [$this, 'handle_reset_progress']);
-        add_action('edit_user_profile_update', [$this, 'handle_reset_progress']);
+        add_action('wp_ajax_pmes_reset_progress', [$this, 'ajax_reset_progress']);
 
         error_log("PMES Log Fallback initialized");
     }
@@ -163,7 +162,8 @@ class TrackVideo {
     }
 
     public function display_video_progress($user): void {
-        $progress = get_user_meta($user->ID, 'pmes_video_progress', true);
+        $user_id = $user->ID;
+        $progress = get_user_meta($user_id, 'pmes_video_progress', true);
         $progress = is_array($progress) ? $progress : [
             'played' => 0,
             'paused' => 0,
@@ -171,62 +171,55 @@ class TrackVideo {
             'completed' => 0,
         ];
 
-        // Calculate percentage watched based on completion or simple heuristic
         $percent = !empty($progress['completed']) ? 100 : 0;
-
         ?>
         <h2>PMES Video Progress</h2>
-        <table class="form-table">
+        <table class="form-table" id="pmes-progress-table-<?php echo esc_attr($user_id); ?>">
             <tr>
                 <th>Progress</th>
                 <td><?php echo esc_html($percent); ?>%</td>
             </tr>
             <tr>
                 <th>Times Played</th>
-                <td><?php echo esc_html($progress['played'] ?? 0); ?></td>
+                <td><?php echo esc_html($progress['played']); ?></td>
             </tr>
             <tr>
                 <th>Times Paused</th>
-                <td><?php echo esc_html($progress['paused'] ?? 0); ?></td>
+                <td><?php echo esc_html($progress['paused']); ?></td>
             </tr>
             <tr>
                 <th>Times Skipped</th>
-                <td><?php echo esc_html($progress['skipped'] ?? 0); ?></td>
+                <td><?php echo esc_html($progress['skipped']); ?></td>
             </tr>
             <tr>
                 <th>Status</th>
                 <td><?php echo !empty($progress['completed']) ? 'Completed ✅' : 'Not Completed ❌'; ?></td>
             </tr>
             <tr>
-            <th>Reset Progress</th>
-            <td>
-                <form method="post" action="">
-                    <?php wp_nonce_field('reset_pmes_video_progress', 'reset_pmes_nonce'); ?>
-                    <input type="hidden" name="reset_user_id" value="<?php echo esc_attr($user_id); ?>">
-                    <input type="submit" class="button button-secondary" value="Reset Progress">
-                </form>
-            </td>
-        </tr>
+                <th>Reset Progress</th>
+                <td>
+                    <button 
+                        class="button button-secondary pmes-reset-btn" 
+                        data-user-id="<?php echo esc_attr($user_id); ?>"
+                    >
+                        Reset Progress
+                    </button>
+                    <span class="pmes-reset-msg"></span>
+                </td>
+            </tr>
         </table>
         <?php
     }
 
-    public function handle_reset_progress(): void {
-        if (
-            empty($_POST['reset_pmes_nonce']) ||
-            !wp_verify_nonce($_POST['reset_pmes_nonce'], 'reset_pmes_video_progress') ||
-            empty($_POST['reset_user_id'])
-        ) {
-            return;
+    public function ajax_reset_progress(): void {
+        check_ajax_referer('pmes_reset_nonce');
+
+        $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
+        if (!$user_id) {
+            wp_send_json_error(['message' => 'Invalid user ID']);
         }
 
-        $user_id = intval($_POST['reset_user_id']);
         delete_user_meta($user_id, 'pmes_video_progress');
-
-        add_action('admin_notices', function() {
-            echo '<div class="notice notice-success is-dismissible"><p>Video progress has been reset.</p></div>';
-        });
-    }
-
-  
+        wp_send_json_success(['message' => 'Progress reset']);
+    }    
 }
