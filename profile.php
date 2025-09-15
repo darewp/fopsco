@@ -28,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
         }
 
         // Handle file upload
-        $valid_id = '';
+        $valid_id = get_user_meta($user_id, 'government_id_url', true);
+
         if (!empty($_FILES['government_id']['name'])) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
             require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -38,11 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
             if (!is_wp_error($attach_id)) {
                 update_user_meta($user_id, 'government_id', $attach_id);
                 update_user_meta($user_id, 'government_id_url', esc_url_raw(wp_get_attachment_url($attach_id)));
-                $valid_id = wp_get_attachment_url($attach_id); // ✅ fixed
+                $valid_id = wp_get_attachment_url($attach_id);
             }
         }
 
-        // n8n Trigger
         $current_address = get_user_meta($user_id, 'current_address', true);
         $province        = get_user_meta($user_id, 'province', true);
         $municipality    = get_user_meta($user_id, 'municipality', true);
@@ -57,14 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
             !empty($valid_id) &&
             (empty(is_array($progress) ? $progress['completed'] : $progress))
         ) {
-            
-            wp_remote_post($n8n_url, [
-                'method'  => 'POST',
-                'headers' => [
-                    'Content-Type'  => 'application/json; charset=utf-8',
-                    'Authorization' => 'Basic ' . base64_encode($n8n_username . ':' . $n8n_password),
-                ],
-                'body'    => wp_json_encode([
+            if (empty($n8n_url)) {
+                error_log('n8n webhook skipped: DAREWP_N8N_URL not defined or empty');
+            } else {
+                $payload = [
                     'user_id'         => $user_id,
                     'email'           => $user->user_email,
                     'first_name'      => get_user_meta($user_id, 'first_name', true),
@@ -74,15 +70,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
                     'municipality'    => $municipality,
                     'barangay'        => $barangay,
                     'valid_id'        => $valid_id,
-                ]),
-                'data_format' => 'body',
-            ]);
+                ];
 
-            if (is_wp_error($response)) {
-                error_log('n8n webhook error: ' . $response->get_error_message());
-            } else {
-                error_log('n8n webhook response code: ' . wp_remote_retrieve_response_code($response));
-                error_log('n8n webhook response body: ' . wp_remote_retrieve_body($response));
+                $args = [
+                    'method'  => 'POST',
+                    'headers' => [
+                        'Content-Type' => 'application/json; charset=utf-8',
+                    ],
+                    'body'    => wp_json_encode($payload),
+                    'timeout' => 15,
+                ];
+
+                if (!empty($n8n_username) || !empty($n8n_password)) {
+                    $args['headers']['Authorization'] = 'Basic ' . base64_encode($n8n_username . ':' . $n8n_password);
+                }
+
+                $response = wp_remote_post($n8n_url, $args);
+
+                if (is_wp_error($response)) {
+                    error_log('n8n webhook error: ' . $response->get_error_message());
+                } else {
+                    error_log('n8n webhook response code: ' . wp_remote_retrieve_response_code($response));
+                    error_log('n8n webhook response body: ' . wp_remote_retrieve_body($response));
+                }
             }
         }
 
