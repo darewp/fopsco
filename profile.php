@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
         }
 
         // Handle file upload
+        $valid_id = '';
         if (!empty($_FILES['government_id']['name'])) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
             require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -33,7 +34,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
             if (!is_wp_error($attach_id)) {
                 update_user_meta($user_id, 'government_id', $attach_id);
                 update_user_meta($user_id, 'government_id_url', esc_url_raw(wp_get_attachment_url($attach_id)));
+                $valid_id = wp_get_attachment_url($attach_id); // ✅ fixed
             }
+        }
+
+        // n8n Trigger
+        $current_address = get_user_meta($user_id, 'current_address', true);
+        $province        = get_user_meta($user_id, 'province', true);
+        $municipality    = get_user_meta($user_id, 'municipality', true);
+        $barangay        = get_user_meta($user_id, 'barangay', true);
+        $progress        = get_user_meta($user_id, 'pmes_video_progress', true);
+
+        if (
+            !empty($current_address) &&
+            !empty($province) &&
+            !empty($municipality) &&
+            !empty($barangay) &&
+            !empty($valid_id) && // ✅ fixed
+            (empty(is_array($progress) ? $progress['completed'] : $progress)) // ✅ safe check
+        ) {
+            $webhook_url = 'https://your-n8n-instance.com/webhook/profile-update';
+            wp_remote_post($webhook_url, [
+                'method'  => 'POST',
+                'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
+                'body'    => wp_json_encode([
+                    'user_id'         => $user_id,
+                    'email'           => $user->user_email,
+                    'first_name'      => get_user_meta($user_id, 'first_name', true),
+                    'last_name'       => get_user_meta($user_id, 'last_name', true),
+                    'current_address' => $current_address,
+                    'province'        => $province,
+                    'municipality'    => $municipality,
+                    'barangay'        => $barangay,
+                    'valid_id'        => $valid_id,
+                ]),
+                'data_format' => 'body',
+            ]);
         }
 
         $message = "Profile updated successfully.";
