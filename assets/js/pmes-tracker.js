@@ -10,41 +10,54 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("user_id", VideoTracker.user_id);
 
         for (const [key, value] of Object.entries(extraData)) {
-        formData.append(key, value);
+            formData.append(key, value);
         }
 
         fetch(VideoTracker.ajaxurl, {
-        method: "POST",
-        credentials: "same-origin",
-        body: formData,
+            method: "POST",
+            credentials: "same-origin",
+            body: formData,
         })
-        .then((res) => res.json())
-        .then((response) => {
+        .then(res => res.json())
+        .then(response => {
             if (!response.success) {
-            console.error("Video Tracker Error:", response.data.message);
+                console.error("Video Tracker Error:", response.data.message);
             } else {
-            console.log("Video Tracker:", response.data.message);
+                console.log("Video Tracker:", response.data.message);
             }
         })
-        .catch((err) => console.error("AJAX Request Failed:", err));
+        .catch(err => console.error("AJAX Request Failed:", err));
     };
 
     let lastTime = 0;
+    let accumulatedTime = 0;
 
     video.addEventListener("play", () => sendVideoEvent("video_played"));
     video.addEventListener("pause", () => sendVideoEvent("video_paused"));
-    video.addEventListener("ended", () => sendVideoEvent("video_completed"));
+    video.addEventListener("ended", () => {
+        accumulatedTime += Math.floor(video.currentTime - lastTime);
+        sendVideoEvent("video_completed", { watched_seconds: accumulatedTime });
+        accumulatedTime = 0;
+        lastTime = 0;
+    });
 
     video.addEventListener("seeking", () => {
         const from = Math.floor(lastTime);
         const to = Math.floor(video.currentTime);
 
-        if (Math.abs(to - from) > 1) { // reduce threshold to 1 second
-        sendVideoEvent("video_skipped", { fromTime: from, toTime: to });
+        if (Math.abs(to - from) > 1) {
+            accumulatedTime += Math.floor(from - lastTime);
+            sendVideoEvent("video_skipped", { fromTime: from, toTime: to });
         }
+        lastTime = video.currentTime;
     });
 
     video.addEventListener("timeupdate", () => {
-        lastTime = video.currentTime;
+        const current = video.currentTime;
+        const delta = current - lastTime;
+        if (delta > 0 && delta < 5) {
+            accumulatedTime += Math.floor(delta);
+        }
+        lastTime = current;
     });
 });
