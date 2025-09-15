@@ -35,13 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     video.addEventListener("play", () => {
         lastTime = video.currentTime;
-        console.log("[VideoTracker] Play at", lastTime, "seconds");
+        console.log("Play at", lastTime, "seconds");
         sendVideoEvent("video_played");
     });
 
     video.addEventListener("pause", () => {
         accumulatedTime += Math.floor(video.currentTime - lastTime);
-        console.log("[VideoTracker] Pause at", video.currentTime, "seconds, accumulated:", accumulatedTime);
+        console.log("Pause at", video.currentTime, "seconds, accumulated:", accumulatedTime);
         sendVideoEvent("video_paused", {
             watched_seconds: accumulatedTime,
             video_duration: Math.floor(video.duration)
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     video.addEventListener("ended", () => {
         accumulatedTime += Math.floor(video.currentTime - lastTime);
-        console.log("[VideoTracker] Video ended, total watched:", accumulatedTime, "seconds");
+        console.log("Video ended, total watched:", accumulatedTime, "seconds");
         sendVideoEvent("video_completed", {
             watched_seconds: accumulatedTime,
             video_duration: Math.floor(video.duration)
@@ -63,9 +63,11 @@ document.addEventListener("DOMContentLoaded", () => {
     video.addEventListener("seeking", () => {
         const from = lastTime;
         const to = video.currentTime;
+        console.log("Seeking from", from, "to", to);
+
         if (Math.abs(to - from) > 1) {
-            accumulatedTime += Math.floor(Math.min(from, to) - lastTime);
-            console.log("[VideoTracker] Skipped from", from, "to", to, "accumulated:", accumulatedTime);
+            accumulatedTime += Math.floor(Math.min(from, to) - Math.min(from, lastTime));
+            console.log("Skipped from", from, "to", to, "accumulated:", accumulatedTime);
             sendVideoEvent("video_skipped", {
                 fromTime: Math.floor(from),
                 toTime: Math.floor(to),
@@ -73,14 +75,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 video_duration: Math.floor(video.duration)
             });
         }
+
         lastTime = video.currentTime;
     });
 
     video.addEventListener("timeupdate", () => {
-        const delta = video.currentTime - lastTime;
+        const current = video.currentTime;
+        const delta = current - lastTime;
         if (delta > 0 && delta < 5) {
             accumulatedTime += Math.floor(delta);
+            console.log("Timeupdate - current:", current, "delta:", delta, "accumulated:", accumulatedTime);
         }
-        lastTime = video.currentTime;
+        lastTime = current;
     });
+
 });
