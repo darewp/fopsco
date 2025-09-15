@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
 <?php get_header(); ?>
 <div class="max-w-7xl mx-auto px-4">
     <div class="flex flex-wrap justify-center">
-        <div class="w-full py-10">
+        <div class="w-full md:max-w-6xl py-10">
             <h1 class="text-2xl font-bold mb-6">My Profile</h1>
 
             <?php if (!empty($message)) : ?>
@@ -58,24 +58,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
             <form method="post" enctype="multipart/form-data" class="space-y-6">
                 <?php wp_nonce_field('fopsco_update_profile', 'fopsco_profile_nonce'); ?>
 
-                <div class="flex md:flex-col">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                     <!-- First Name -->
-                    <div class="w-1/4 md:w-full md:mb-4">
+                    <div class="w-full">
                         <label class="block text-sm font-medium">First Name</label>
                         <input type="text" class="mt-1 block w-full border rounded p-2"
-                            value="<?php echo esc_attr($user->first_name); ?>" disabled>
+                            value="<?php echo esc_attr(get_user_meta($user_id, 'first_name', true)); ?>" disabled>
                     </div>
 
                     <!-- Last Name -->
-                    <div class="w-1/4 md:w-full md:mb-4">
+                    <div class="w-full">
                         <label class="block text-sm font-medium">Last Name</label>
                         <input type="text" class="mt-1 block w-full border rounded p-2"
-                            value="<?php echo esc_attr($user->last_name); ?>" disabled>
+                            value="<?php echo esc_attr(get_user_meta($user_id, 'last_name', true)); ?>" disabled>
                     </div>
                 
 
                     <!-- Phone -->
-                    <div class="w-1/4 md:w-full md:mb-4">
+                    <div class="w-full">
                         <label class="block text-sm font-medium">Mobile Number</label>
                         <input type="tel" name="phone_number"
                             value="<?php echo esc_attr(get_user_meta($user_id, 'phone_number', true)); ?>"
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
                     </div>
 
                     <!-- Birthdate -->
-                    <div class="w-1/4 md:w-full md:mb-4">
+                    <div class="w-full">
                         <label class="block text-sm font-medium">Birthdate</label>
                         <input type="date" name="birthdate"
                             value="<?php echo esc_attr(get_user_meta($user_id, 'birthdate', true)); ?>"
@@ -91,27 +91,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
                     </div>
                 </div>
 
-                <!-- Gender -->
-                <div>
-                    <label class="block text-sm font-medium">Gender</label>
-                    <select name="gender" class="mt-1 block w-full border rounded p-2">
-                        <option value="">Select Gender</option>
-                        <option value="Male" <?php selected(get_user_meta($user_id, 'gender', true), 'Male'); ?>>Male</option>
-                        <option value="Female" <?php selected(get_user_meta($user_id, 'gender', true), 'Female'); ?>>Female</option>
-                    </select>
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <!-- Gender -->
+                    <div class="w-full">
+                        <label class="block text-sm font-medium">Gender</label>
+                        <select name="gender" class="mt-1 block w-full border rounded p-2">
+                            <option value="">Select Gender</option>
+                            <option value="Male" <?php selected(get_user_meta($user_id, 'gender', true), 'Male'); ?>>Male</option>
+                            <option value="Female" <?php selected(get_user_meta($user_id, 'gender', true), 'Female'); ?>>Female</option>
+                        </select>
+                    </div>
 
-                <!-- Civil Status -->
-                <div>
-                    <label class="block text-sm font-medium">Civil Status</label>
-                    <select name="civil_status" class="mt-1 block w-full border rounded p-2">
-                        <option value="">Select Status</option>
-                        <option value="Single" <?php selected(get_user_meta($user_id, 'civil_status', true), 'Single'); ?>>Single</option>
-                        <option value="Married" <?php selected(get_user_meta($user_id, 'civil_status', true), 'Married'); ?>>Married</option>
-                        <option value="Widow" <?php selected(get_user_meta($user_id, 'civil_status', true), 'Widow'); ?>>Widow</option>
-                    </select>
+                    <!-- Civil Status -->
+                    <div class="w-full">
+                        <label class="block text-sm font-medium">Civil Status</label>
+                        <select name="civil_status" class="mt-1 block w-full border rounded p-2">
+                            <option value="">Select Status</option>
+                            <option value="Single" <?php selected(get_user_meta($user_id, 'civil_status', true), 'Single'); ?>>Single</option>
+                            <option value="Married" <?php selected(get_user_meta($user_id, 'civil_status', true), 'Married'); ?>>Married</option>
+                            <option value="Widow" <?php selected(get_user_meta($user_id, 'civil_status', true), 'Widow'); ?>>Widow</option>
+                        </select>
+                    </div>
                 </div>
-
                 <!-- Current Address -->
                 <div>
                     <label class="block text-sm font-medium">Current Address</label>
