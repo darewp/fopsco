@@ -114,18 +114,22 @@ class TrackVideo {
         wp_send_json_success(['message'=>"Video {$type} count updated",'data'=>$data]);
     }
 
+
+    // n8n
     private function trigger_n8n_workflow() {
         $user_id = get_current_user_id();
         $user = get_userdata($user_id);
         if (!$user || empty($this->pmes_url)) return;
 
         $phone_number = get_user_meta($user_id, 'phone_number', true);
+        $valid_id = get_user_meta($user_id, 'government_id', true);
         $body = [
             'user_id'     => $user_id,
             'user_email'  => $user->user_email,
             'first_name'  => $user->first_name,
             'last_name'   => $user->last_name,
             'phone_number'=> $phone_number ?: '',
+            'valid_id'    => $valid_id,
             'status'      => 'completed',
             'timestamp'   => current_time('mysql')
         ];
