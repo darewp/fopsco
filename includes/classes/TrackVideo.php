@@ -20,6 +20,12 @@ class TrackVideo {
         add_action( 'wp_ajax_video_completed', [ $this, 'handle_video_completed' ] );
 
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] ); 
+
+        //USER PROFILE
+        add_action('show_user_profile', [$this, 'display_video_progress']);
+        add_action('edit_user_profile', [$this, 'display_video_progress']);
+
+
         error_log("PMES Log Fallback initialized");
     }
 
@@ -153,4 +159,41 @@ class TrackVideo {
             wp_send_json_error( [ 'message' => 'Invalid nonce' ] );
         }
     }
+
+    public function display_video_progress($user): void {
+        $user_id = $user->ID;
+        $progress = get_user_meta($user_id, 'pmes_video_progress', true);
+
+        $progress = is_array($progress) ? $progress : [
+            'played'    => 0,
+            'paused'    => 0,
+            'skipped'   => 0,
+            'completed' => 0,
+            'updated'   => '',
+        ];
+
+        // Calculate progress percentage (simple example: completed = 100%)
+        $percent = !empty($progress['completed']) ? 100 : 0;
+        ?>
+        <h2>PMES Video Progress</h2>
+        <table class="form-table">
+            <tr>
+                <th>Progress</th>
+                <td><?php echo esc_html($percent) . '%'; ?></td>
+            </tr>
+            <tr>
+                <th>Times Played</th>
+                <td><?php echo esc_html($progress['played'] ?? 0); ?></td>
+            </tr>
+            <tr>
+                <th>Times Skipped</th>
+                <td><?php echo esc_html($progress['skipped'] ?? 0); ?></td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td><?php echo !empty($progress['completed']) ? 'Completed ✅' : 'Not Completed ❌'; ?></td>
+            </tr>
+        </table>
+        <?php
+    }    
 }
