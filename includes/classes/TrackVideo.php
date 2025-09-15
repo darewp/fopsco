@@ -161,29 +161,31 @@ class TrackVideo {
     }
 
     public function display_video_progress($user): void {
-        $user_id = $user->ID;
-        $progress = get_user_meta($user_id, 'pmes_video_progress', true);
-
+        $progress = get_user_meta($user->ID, 'pmes_video_progress', true);
         $progress = is_array($progress) ? $progress : [
-            'played'    => 0,
-            'paused'    => 0,
-            'skipped'   => 0,
+            'played' => 0,
+            'paused' => 0,
+            'skipped' => 0,
             'completed' => 0,
-            'updated'   => '',
         ];
 
-        // Calculate progress percentage (simple example: completed = 100%)
+        // Calculate percentage watched based on completion or simple heuristic
         $percent = !empty($progress['completed']) ? 100 : 0;
+
         ?>
         <h2>PMES Video Progress</h2>
         <table class="form-table">
             <tr>
                 <th>Progress</th>
-                <td><?php echo esc_html($percent) . '%'; ?></td>
+                <td><?php echo esc_html($percent); ?>%</td>
             </tr>
             <tr>
                 <th>Times Played</th>
                 <td><?php echo esc_html($progress['played'] ?? 0); ?></td>
+            </tr>
+            <tr>
+                <th>Times Paused</th>
+                <td><?php echo esc_html($progress['paused'] ?? 0); ?></td>
             </tr>
             <tr>
                 <th>Times Skipped</th>
@@ -195,5 +197,6 @@ class TrackVideo {
             </tr>
         </table>
         <?php
-    }    
+    }
+  
 }

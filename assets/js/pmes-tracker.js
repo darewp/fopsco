@@ -29,28 +29,22 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((err) => console.error("AJAX Request Failed:", err));
   };
 
-  video.addEventListener("play", () => {
-    sendVideoEvent("video_played");
-  });
+  let lastTime = 0;
 
-  video.addEventListener("pause", () => {
-    sendVideoEvent("video_paused");
-  });
-
-  video.addEventListener("ended", () => {
-    sendVideoEvent("video_completed");
-  });
+  video.addEventListener("play", () => sendVideoEvent("video_played"));
+  video.addEventListener("pause", () => sendVideoEvent("video_paused"));
+  video.addEventListener("ended", () => sendVideoEvent("video_completed"));
 
   video.addEventListener("seeking", () => {
-    const from = Math.floor(video._lastTime || 0);
+    const from = Math.floor(lastTime);
     const to = Math.floor(video.currentTime);
 
-    if (Math.abs(to - from) > 2) {
+    if (Math.abs(to - from) > 1) { // reduce threshold to 1 second
       sendVideoEvent("video_skipped", { fromTime: from, toTime: to });
     }
   });
 
   video.addEventListener("timeupdate", () => {
-    video._lastTime = Math.floor(video.currentTime);
+    lastTime = video.currentTime;
   });
 });
