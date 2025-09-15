@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     const video = document.getElementById("lessonVideo");
-
     if (!video || typeof VideoTracker === "undefined") return;
+
+    let lastTime = 0;
+    let accumulatedTime = 0;
 
     const sendVideoEvent = (action, extraData = {}) => {
         const formData = new FormData();
@@ -16,58 +18,61 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(VideoTracker.ajaxurl, {
             method: "POST",
             credentials: "same-origin",
-            body: formData,
+            body: formData
         })
         .then(res => res.json())
         .then(response => {
             if (!response.success) {
                 console.error("Video Tracker Error:", response.data.message);
-            } else {
-                console.log("Video Tracker:", response.data.message);
             }
         })
         .catch(err => console.error("AJAX Request Failed:", err));
     };
 
-    let lastTime = 0;
-    let accumulatedTime = 0;
-    let skipping = false;
+    video.addEventListener("play", () => {
+        lastTime = video.currentTime;
+        sendVideoEvent("video_played");
+    });
 
-    // Track play, pause
-    video.addEventListener("play", () => sendVideoEvent("video_played"));
-    video.addEventListener("pause", () => sendVideoEvent("video_paused"));
-
-    // Track seeking (skipped)
-    video.addEventListener("seeking", () => {
-        const from = Math.floor(lastTime);
-        const to = Math.floor(video.currentTime);
-
-        if (Math.abs(to - from) > 1) {
-            sendVideoEvent("video_skipped", { fromTime: from, toTime: to });
-            skipping = true;
-        }
+    video.addEventListener("pause", () => {
+        accumulatedTime += Math.floor(video.currentTime - lastTime);
+        sendVideoEvent("video_paused", {
+            watched_seconds: accumulatedTime,
+            video_duration: Math.floor(video.duration)
+        });
         lastTime = video.currentTime;
     });
 
-    // Track time update
-    video.addEventListener("timeupdate", () => {
-        if (!skipping) {
-            const delta = video.currentTime - lastTime;
-            if (delta > 0) accumulatedTime += delta;
-        } else {
-            skipping = false;
-        }
-        lastTime = video.currentTime;
-    });
-
-    // Track ended
     video.addEventListener("ended", () => {
         accumulatedTime += Math.floor(video.currentTime - lastTime);
-        sendVideoEvent("video_completed", { 
-            watched_seconds: Math.floor(accumulatedTime),
+        sendVideoEvent("video_completed", {
+            watched_seconds: accumulatedTime,
             video_duration: Math.floor(video.duration)
         });
         accumulatedTime = 0;
         lastTime = 0;
+    });
+
+    video.addEventListener("seeking", () => {
+        const from = lastTime;
+        const to = video.currentTime;
+        if (Math.abs(to - from) > 1) {
+            accumulatedTime += Math.floor(Math.min(from, to) - lastTime);
+            sendVideoEvent("video_skipped", {
+                fromTime: Math.floor(from),
+                toTime: Math.floor(to),
+                watched_seconds: accumulatedTime,
+                video_duration: Math.floor(video.duration)
+            });
+        }
+        lastTime = video.currentTime;
+    });
+
+    video.addEventListener("timeupdate", () => {
+        const delta = video.currentTime - lastTime;
+        if (delta > 0 && delta < 5) {
+            accumulatedTime += Math.floor(delta);
+        }
+        lastTime = video.currentTime;
     });
 });
