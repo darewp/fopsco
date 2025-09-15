@@ -109,30 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
                     </select>
                 </div>
 
-                <!-- Province -->
-                <div>
-                    <label class="block text-sm font-medium">Province</label>
-                    <input type="text" name="province"
-                        value="<?php echo esc_attr(get_user_meta($user_id, 'province', true)); ?>"
-                        class="mt-1 block w-full border rounded p-2">
-                </div>
-
-                <!-- Municipality -->
-                <div>
-                    <label class="block text-sm font-medium">Municipality</label>
-                    <input type="text" name="municipality"
-                        value="<?php echo esc_attr(get_user_meta($user_id, 'municipality', true)); ?>"
-                        class="mt-1 block w-full border rounded p-2">
-                </div>
-
-                <!-- Barangay -->
-                <div>
-                    <label class="block text-sm font-medium">Barangay</label>
-                    <input type="text" name="barangay"
-                        value="<?php echo esc_attr(get_user_meta($user_id, 'barangay', true)); ?>"
-                        class="mt-1 block w-full border rounded p-2">
-                </div>
-
                 <!-- Current Address -->
                 <div>
                     <label class="block text-sm font-medium">Current Address</label>
@@ -140,6 +116,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fopsco_profile_nonce'
                         value="<?php echo esc_attr(get_user_meta($user_id, 'current_address', true)); ?>"
                         class="mt-1 block w-full border rounded p-2">
                 </div>
+                <?php
+                $province     = get_user_meta($user_id, 'province', true);
+                $municipality = get_user_meta($user_id, 'municipality', true);
+                $barangay     = get_user_meta($user_id, 'barangay', true);
+                ?>
+
+                <!-- Province -->
+                <div>
+                    <label class="block text-sm font-medium">Province</label>
+                    <select id="province" name="province" class="mt-1 block w-full border rounded p-2">
+                        <option value="">Loading provinces...</option>
+                    </select>
+                </div>
+
+                <!-- Municipality -->
+                <div>
+                    <label class="block text-sm font-medium">Municipality/City</label>
+                    <select id="municipality" name="municipality" class="mt-1 block w-full border rounded p-2">
+                        <option value="">Select Municipality/City</option>
+                    </select>
+                </div>
+
+                <!-- Barangay -->
+                <div>
+                    <label class="block text-sm font-medium">Barangay</label>
+                    <select id="barangay" name="barangay" class="mt-1 block w-full border rounded p-2">
+                        <option value="">Select Barangay</option>
+                    </select>
+                </div>
+
+                <script>
+                    window.phLocationsData = {
+                        selected: {
+                            province: "<?php echo esc_js($province); ?>",
+                            municipality: "<?php echo esc_js($municipality); ?>",
+                            barangay: "<?php echo esc_js($barangay); ?>"
+                        }
+                    };
+                </script>
 
                 <!-- Facebook -->
                 <div>
