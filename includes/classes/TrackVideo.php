@@ -20,6 +20,7 @@ class TrackVideo {
         add_action( 'wp_ajax_video_completed', [ $this, 'handle_video_completed' ] );
 
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] ); 
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
 
         //USER PROFILE
         add_action('show_user_profile', [$this, 'display_video_progress']);
@@ -51,6 +52,26 @@ class TrackVideo {
             );
         }
     }  
+
+    public function enqueue_admin_scripts() {
+        wp_enqueue_script(
+            'pmes-admin',
+            get_template_directory_uri() . '/assets/js/pmes-admin.js',
+            [],
+            filemtime(get_template_directory() . '/assets/js/pmes-admin.js'),
+            true
+        );
+
+        wp_localize_script(
+            'pmes-admin',
+            'PMESAdmin',
+            [
+                'ajaxurl' => admin_url('admin-ajax.php'),
+                'nonce'   => wp_create_nonce('pmes_reset_nonce')
+            ]
+        );
+    }
+
 
     public function handle_video_played() {
         $this->verify_nonce();
