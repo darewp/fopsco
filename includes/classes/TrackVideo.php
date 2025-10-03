@@ -134,7 +134,7 @@ class TrackVideo {
             'first_name'  => $user->first_name,
             'last_name'   => $user->last_name,
             'phone_number'=> $phone_number ?: '',
-            'full_address' => $curr_address. ' ' .$barangay_name. ' ' .$municipality_name. ' ' .$province_name ?: '',
+            'full_address' => $curr_address. ', ' .$barangay_name. ', ' .$municipality_name. ', ' .$province_name ?: '',
             'valid_id'    => $valid_id,
             'status'      => 'completed',
             'timestamp'   => current_time('mysql')
