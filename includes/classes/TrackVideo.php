@@ -115,11 +115,16 @@ class TrackVideo {
     }
 
 
-    // n8n
+    // n8n PMES Workflow Trigger
     private function trigger_n8n_workflow() {
         $user_id = get_current_user_id();
         $user = get_userdata($user_id);
         if (!$user || empty($this->pmes_url)) return;
+
+        $curr_address = get_user_meta($user_id, 'current_address', true);
+        $province_name = get_user_meta($user_id, 'province_name', true);
+        $municipality_name = get_user_meta($user_id, 'municipality_name', true);
+        $barangay_name = get_user_meta($user_id, 'barangay_name', true);
 
         $phone_number = get_user_meta($user_id, 'phone_number', true);
         $valid_id = get_user_meta($user_id, 'government_id', true);
@@ -129,6 +134,7 @@ class TrackVideo {
             'first_name'  => $user->first_name,
             'last_name'   => $user->last_name,
             'phone_number'=> $phone_number ?: '',
+            'full_address' => $curr_address. ' ' .$barangay_name. ' ' .$municipality_name. ' ' .$province_name ?: '',
             'valid_id'    => $valid_id,
             'status'      => 'completed',
             'timestamp'   => current_time('mysql')
