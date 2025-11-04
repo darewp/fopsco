@@ -23,7 +23,7 @@ foreach ( $required_fields as $field ) {
 }
 ?>
 <div class="max-w-7xl mx-auto px-4 flex justify-center items-center">
-      <div class="min-h-screen flex flex-wrap justify-center align-center mt-4 max-w-4xl w-full">
+      <div class="min-h-screen flex flex-wrap justify-center align-center mt-4 max-w-5xl w-full">
             
             <?php
             if ( $missing && ! is_page( 'profile' ) ) {
