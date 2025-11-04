@@ -1,7 +1,5 @@
 # Node / Tailwind build files
 node_modules/
-package.json
-package-lock.json
 tailwind.config.js
 postcss.config.js
 build.css
