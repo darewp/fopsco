@@ -12,6 +12,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Tailwind CSS
+        run: npx @tailwindcss/cli -i ./css/input.css -o ./css/output.css
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
