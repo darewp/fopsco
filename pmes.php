@@ -47,11 +47,9 @@ foreach ( $required_fields as $field ) {
                   Your browser does not support the video tag.
                   </video>
             </div>
-            <?php
-            }
-            ?>
+
             <section class="mx-auto px-6 pt-6">
-            <h1 class="text-3xl font-bold tracking-tight mb-8 text-gray-900">10 Quick Q&A About Joining FOPSCo (For the Lazy But Curious 😄)</h1>
+            <h1 class="text-2xl font-bold tracking-tight mb-8 text-gray-900">10 Quick Q&A About Joining FOPSCo (For the Lazy But Curious 😄)</h1>
 
             <div class="space-y-4">
                   <details class="group rounded-2xl border border-gray-200 bg-white p-5 shadow-sm open:shadow transition-all">
@@ -173,8 +171,10 @@ foreach ( $required_fields as $field ) {
                         </div>
                   </details>
             </div>
-      </section>
-
+            </section>
+            <?php
+            }
+            ?>
       </div>
 </div>
 <?php
