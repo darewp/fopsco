@@ -5,7 +5,7 @@ This file contains the core functions and classes for the theme.
 Testing deployment and functionality.
 */
 
-
+require_once get_template_directory() . '/vendor/autoload.php';
 use Carbon_Fields\Carbon_Fields;
 
 add_action('after_setup_theme', function () {
