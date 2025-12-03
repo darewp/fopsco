@@ -25,5 +25,15 @@ class CarbonFieldInit {
                     ])
                     ->set_layout('tabbed-horizontal'),
             ]);
+
+        Container::make('theme_options', 'Partners')
+            ->add_fields([
+                Field::make('complex', 'partners_logo', 'Partners Logo')
+                    ->add_fields([
+                        Field::make('image', 'logo', 'Logo'),
+                        Field::make('text', 'partner_name', 'Partner Name'),
+                    ])
+                    ->set_layout('tabbed-horizontal'),
+            ]);
     }
 }
