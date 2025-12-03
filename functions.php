@@ -11,6 +11,7 @@ require get_template_directory() . '/includes/classes/SVGSupport.php';
 require get_template_directory() . '/includes/classes/JoinMember.php';
 require get_template_directory() . '/includes/classes/DareWPAuto.php';
 require get_template_directory() . '/includes/classes/TrackVideo.php';
+require get_template_directory() . '/includes/classes/CarbonFieldInit.php';
 
 \Fopsco\Classes\HooksManager::get_instance();
 \Fopsco\Classes\AssetLoader::get_instance();
@@ -18,3 +19,4 @@ require get_template_directory() . '/includes/classes/TrackVideo.php';
 \Fopsco\Classes\JoinMember::get_instance();
 \Fopsco\Classes\DareWPAuto::get_instance();
 \Fopsco\Classes\TrackVideo::get_instance();
+\Fopsco\Classes\CarbonFieldInit::get_instance();
