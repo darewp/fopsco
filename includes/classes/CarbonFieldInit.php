@@ -17,6 +17,7 @@ class CarbonFieldInit {
         Container::make('theme_options', 'Committee')
             ->add_fields([
                 Field::make('complex', 'committee_members', 'Committee Members')
+                    ->set_visible_in_graphql(true)
                     ->add_fields([
                         Field::make('text', 'full_name', 'Full Name'),
                         Field::make('text', 'role', 'Role'),
@@ -29,6 +30,7 @@ class CarbonFieldInit {
         Container::make('theme_options', 'Partners')
             ->add_fields([
                 Field::make('complex', 'partners_logo', 'Partners Logo')
+                    ->set_visible_in_graphql(true)
                     ->add_fields([
                         Field::make('image', 'logo', 'Logo'),
                         Field::make('text', 'partner_name', 'Partner Name'),
