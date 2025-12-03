@@ -25,7 +25,7 @@ class CarbonFieldInit {
                     ])
                     ->set_layout('tabbed-horizontal'),
             ]);
-
+        // Partners Logo
         Container::make('theme_options', 'Partners')
             ->add_fields([
                 Field::make('complex', 'partners_logo', 'Partners Logo')
