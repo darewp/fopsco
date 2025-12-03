@@ -5,7 +5,7 @@ use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 use Fopsco\Traits\Singleton;
 
-class CarbonFieldsInit {
+class CarbonFieldInit {
     use Singleton;
 
     public function __construct() {
