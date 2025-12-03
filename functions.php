@@ -4,6 +4,14 @@ Template file: Functions.php
 This file contains the core functions and classes for the theme.
 Testing deployment and functionality.
 */
+
+
+use Carbon_Fields\Carbon_Fields;
+
+add_action('after_setup_theme', function () {
+    Carbon_Fields::boot();
+});
+
 require get_template_directory() . '/includes/traits/Singleton.php';
 require get_template_directory() . '/includes/classes/HooksManager.php';
 require get_template_directory() . '/includes/classes/AssetLoader.php';
